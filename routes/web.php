@@ -34,7 +34,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use Illuminate\Support\Facades\Route;
 
-// Frontend Routes
+// Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Services
