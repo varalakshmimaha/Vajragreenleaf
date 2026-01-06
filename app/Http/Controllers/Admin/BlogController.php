@@ -95,7 +95,7 @@ class BlogController extends Controller
 
         $data['is_featured'] = $request->boolean('is_featured');
 
-        if ($data['status'] === 'published' && !$blog->published_at) {
+        if (isset($data['status']) && $data['status'] === 'published' && !$blog->published_at) {
             $data['published_at'] = now();
         }
 

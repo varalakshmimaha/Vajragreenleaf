@@ -58,7 +58,8 @@ class TeamController extends Controller
 
     public function edit(Team $team)
     {
-        return view('admin.team.form', compact('team'));
+        $member = $team;
+        return view('admin.team.form', compact('member'));
     }
 
     public function update(Request $request, Team $team)
