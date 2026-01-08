@@ -58,7 +58,8 @@ class SettingsController extends Controller
 
     public function seo()
     {
-        return view('admin.settings.seo');
+        $settings = $this->settingsService->getGroup('seo');
+        return view('admin.settings.seo', compact('settings'));
     }
 
     public function updateSeo(Request $request)
@@ -70,6 +71,7 @@ class SettingsController extends Controller
             'og_image' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'google_analytics' => 'nullable|string',
             'google_tag_manager' => 'nullable|string',
+            'robots' => 'nullable|string',
         ]);
 
         if ($request->hasFile('og_image')) {
@@ -88,7 +90,8 @@ class SettingsController extends Controller
 
     public function social()
     {
-        return view('admin.settings.social');
+        $settings = $this->settingsService->getGroup('social');
+        return view('admin.settings.social', compact('settings'));
     }
 
     public function updateSocial(Request $request)
@@ -111,19 +114,20 @@ class SettingsController extends Controller
 
     public function contact()
     {
-        return view('admin.settings.contact');
+        $settings = $this->settingsService->getGroup('contact');
+        return view('admin.settings.contact', compact('settings'));
     }
 
     public function updateContact(Request $request)
     {
         $data = $request->validate([
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string|max:50',
-            'phone_2' => 'nullable|string|max:50',
-            'email' => 'nullable|email|max:255',
-            'email_2' => 'nullable|email|max:255',
-            'working_hours' => 'nullable|string|max:255',
-            'map_embed' => 'nullable|string',
+            'contact_address' => 'nullable|string',
+            'contact_phone' => 'nullable|string|max:50',
+            'whatsapp' => 'nullable|string|max:50',
+            'contact_email' => 'nullable|email|max:255',
+            'support_email' => 'nullable|email|max:255',
+            'business_hours' => 'nullable|string|max:255',
+            'google_maps_url' => 'nullable|string',
         ]);
 
         foreach ($data as $key => $value) {
@@ -135,7 +139,8 @@ class SettingsController extends Controller
 
     public function scripts()
     {
-        return view('admin.settings.scripts');
+        $settings = $this->settingsService->getGroup('scripts');
+        return view('admin.settings.scripts', compact('settings'));
     }
 
     public function updateScripts(Request $request)

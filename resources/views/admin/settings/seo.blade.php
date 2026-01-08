@@ -28,25 +28,25 @@
 
             <div class="mb-6">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Default Meta Title</label>
-                <input type="text" name="meta_title" value="{{ \App\Models\SiteSetting::get('meta_title') }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <input type="text" name="meta_title" value="{{ $settings['meta_title'] ?? '' }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                 <p class="text-sm text-gray-500 mt-1">Used when pages don't have their own meta title.</p>
             </div>
 
             <div class="mb-6">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Default Meta Description</label>
-                <textarea name="meta_description" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ \App\Models\SiteSetting::get('meta_description') }}</textarea>
+                <textarea name="meta_description" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ $settings['meta_description'] ?? '' }}</textarea>
             </div>
 
             <div class="mb-6">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Meta Keywords</label>
-                <input type="text" name="meta_keywords" value="{{ \App\Models\SiteSetting::get('meta_keywords') }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <input type="text" name="meta_keywords" value="{{ $settings['meta_keywords'] ?? '' }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                 <p class="text-sm text-gray-500 mt-1">Comma-separated keywords.</p>
             </div>
 
             <div class="mb-6">
                 <label class="block text-sm font-medium text-gray-700 mb-2">OG Image</label>
-                @if(\App\Models\SiteSetting::get('og_image'))
-                    <img src="{{ asset('storage/' . \App\Models\SiteSetting::get('og_image')) }}" class="h-24 mb-2 rounded">
+                @if($settings['og_image'] ?? null)
+                    <img src="{{ asset('storage/' . $settings['og_image']) }}" class="h-24 mb-2 rounded">
                 @endif
                 <input type="file" name="og_image" class="w-full">
                 <p class="text-sm text-gray-500 mt-1">Recommended: 1200x630 pixels.</p>
@@ -55,11 +55,21 @@
             <div class="mb-6">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Robots Meta Tag</label>
                 <select name="robots" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    <option value="index, follow" {{ \App\Models\SiteSetting::get('robots') == 'index, follow' ? 'selected' : '' }}>Index, Follow</option>
-                    <option value="noindex, follow" {{ \App\Models\SiteSetting::get('robots') == 'noindex, follow' ? 'selected' : '' }}>No Index, Follow</option>
-                    <option value="index, nofollow" {{ \App\Models\SiteSetting::get('robots') == 'index, nofollow' ? 'selected' : '' }}>Index, No Follow</option>
-                    <option value="noindex, nofollow" {{ \App\Models\SiteSetting::get('robots') == 'noindex, nofollow' ? 'selected' : '' }}>No Index, No Follow</option>
+                    <option value="index, follow" {{ ($settings['robots'] ?? '') == 'index, follow' ? 'selected' : '' }}>Index, Follow</option>
+                    <option value="noindex, follow" {{ ($settings['robots'] ?? '') == 'noindex, follow' ? 'selected' : '' }}>No Index, Follow</option>
+                    <option value="index, nofollow" {{ ($settings['robots'] ?? '') == 'index, nofollow' ? 'selected' : '' }}>Index, No Follow</option>
+                    <option value="noindex, nofollow" {{ ($settings['robots'] ?? '') == 'noindex, nofollow' ? 'selected' : '' }}>No Index, No Follow</option>
                 </select>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Google Analytics ID</label>
+                <input type="text" name="google_analytics" value="{{ $settings['google_analytics'] ?? '' }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="UA-XXXXXXXXX-X">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Google Tag Manager ID</label>
+                <input type="text" name="google_tag_manager" value="{{ $settings['google_tag_manager'] ?? '' }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="GTM-XXXXXXX">
             </div>
 
             <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">

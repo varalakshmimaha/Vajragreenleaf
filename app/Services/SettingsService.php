@@ -35,11 +35,11 @@ class SettingsService
     public function getContactSettings(): array
     {
         return [
-            'address' => $this->get('address'),
-            'phone' => $this->get('phone'),
-            'email' => $this->get('email'),
-            'working_hours' => $this->get('working_hours'),
-            'map_embed' => $this->get('map_embed'),
+            'address' => $this->get('contact_address'),
+            'phone' => $this->get('contact_phone'),
+            'email' => $this->get('contact_email'),
+            'working_hours' => $this->get('business_hours'),
+            'map_embed' => $this->get('google_maps_url'),
         ];
     }
 
