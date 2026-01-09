@@ -12,9 +12,9 @@ class SettingsService
         return SiteSetting::get($key, $default);
     }
 
-    public function set(string $key, $value): void
+    public function set(string $key, $value, string $group = 'general'): void
     {
-        SiteSetting::set($key, $value);
+        SiteSetting::set($key, $value, $group);
     }
 
     public function getGroup(string $group): array
@@ -64,10 +64,10 @@ class SettingsService
         ];
     }
 
-    public function updateSettings(array $settings): void
+    public function updateSettings(array $settings, string $group = 'general'): void
     {
         foreach ($settings as $key => $value) {
-            $this->set($key, $value);
+            $this->set($key, $value, $group);
         }
     }
 }

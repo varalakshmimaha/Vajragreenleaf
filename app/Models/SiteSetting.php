@@ -25,11 +25,11 @@ class SiteSetting extends Model
         });
     }
 
-    public static function set(string $key, $value): void
+    public static function set(string $key, $value, string $group = 'general'): void
     {
         static::updateOrCreate(
             ['key' => $key],
-            ['value' => $value]
+            ['value' => $value, 'group' => $group]
         );
         Cache::forget('setting_' . $key);
     }

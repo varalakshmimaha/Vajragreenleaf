@@ -49,7 +49,7 @@ class SettingsController extends Controller
 
         foreach ($data as $key => $value) {
             if (!$request->hasFile($key) || $value) {
-                $this->settingsService->set($key, $value);
+                $this->settingsService->set($key, $value, 'general');
             }
         }
 
@@ -81,7 +81,7 @@ class SettingsController extends Controller
 
         foreach ($data as $key => $value) {
             if (!$request->hasFile($key) || $value) {
-                $this->settingsService->set($key, $value);
+                $this->settingsService->set($key, $value, 'seo');
             }
         }
 
@@ -106,7 +106,7 @@ class SettingsController extends Controller
         ]);
 
         foreach ($data as $key => $value) {
-            $this->settingsService->set($key, $value);
+            $this->settingsService->set($key, $value, 'social');
         }
 
         return back()->with('success', 'Social links updated successfully.');
@@ -131,7 +131,7 @@ class SettingsController extends Controller
         ]);
 
         foreach ($data as $key => $value) {
-            $this->settingsService->set($key, $value);
+            $this->settingsService->set($key, $value, 'contact');
         }
 
         return back()->with('success', 'Contact settings updated successfully.');
@@ -152,7 +152,7 @@ class SettingsController extends Controller
         ]);
 
         foreach ($data as $key => $value) {
-            $this->settingsService->set($key, $value);
+            $this->settingsService->set($key, $value, 'scripts');
         }
 
         return back()->with('success', 'Scripts updated successfully.');
