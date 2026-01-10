@@ -903,4 +903,10 @@
         testImg.src = url;
     }
 </script>
+<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#contentEditor'))
+        .catch(error => console.error(error));
+</script>
 @endpush
