@@ -17,8 +17,9 @@ class FrontendAuthController extends Controller
             'sponsor_id' => 'required|string',
         ]);
 
-        $sponsor = \App\Models\User::where('username', $request->sponsor_id)
-            ->orWhere('id', $request->sponsor_id) // Allow ID as well if username is numeric or just in case
+        // Try to find by referral_id (new 5-digit system) or username (legacy)
+        $sponsor = \App\Models\User::where('referral_id', $request->sponsor_id)
+            ->orWhere('username', $request->sponsor_id)
             ->first();
 
         if ($sponsor && $sponsor->is_active) {
@@ -26,24 +27,17 @@ class FrontendAuthController extends Controller
                 'success' => true,
                 'name' => $sponsor->name,
                 'username' => $sponsor->username,
+                'referral_id' => $sponsor->referral_id,
                 'status' => 'Active',
             ]);
         }
 
-        return response()->json(['message' => 'Invalid Sponsor ID.'], 404);
+        return response()->json(['message' => 'Invalid Referral ID.'], 404);
     }
 
     public function showRegister(Request $request)
     {
-        $sponsorId = $request->query('sponsor');
-        $sponsorName = '';
-        if ($sponsorId) {
-            $sponsor = \App\Models\User::where('username', $sponsorId)->first();
-            if ($sponsor) {
-                $sponsorName = $sponsor->name;
-            }
-        }
-        return view('auth.register', compact('sponsorId', 'sponsorName'));
+        return view('auth.register');
     }
 
     public function register(Request $request)
@@ -60,17 +54,30 @@ class FrontendAuthController extends Controller
             'city' => 'required|string',
             'pincode' => 'required|digits:6',
             'terms' => 'accepted',
+            'sponsor_id' => 'nullable|string', // Can be username or referral_id
         ]);
         $step2 = microtime(true);
         \Illuminate\Support\Facades\Log::info("Reg: Validation took " . ($step2 - $step1) . "s");
 
-        // Auto-generate Sponsor ID
-        $username = $this->generateSponsorId($request->name);
+        // Auto-generate 5-digit Referral ID
+        $referralId = $this->generateReferralId();
+        $username = $this->generateSponsorId($request->name); // Keep username for legacy
         $step3 = microtime(true);
         \Illuminate\Support\Facades\Log::info("Reg: ID Gen took " . ($step3 - $step2) . "s");
 
-        // Determine sponsor: only use provided sponsor_id (username) if present
+        // Determine sponsor: can be either username or referral_id
         $sponsorValue = $request->sponsor_id ?? null;
+        $sponsorReferralId = null;
+        
+        if ($sponsorValue) {
+            $sponsor = \App\Models\User::where('referral_id', $sponsorValue)
+                ->orWhere('username', $sponsorValue)
+                ->first();
+            if ($sponsor) {
+                $sponsorReferralId = $sponsor->referral_id;
+                $sponsorValue = $sponsor->username; // For legacy sponsor_id column
+            }
+        }
 
         $user = \App\Models\User::create([
             'name' => $request->name,
@@ -82,7 +89,9 @@ class FrontendAuthController extends Controller
             'city' => $request->city,
             'pincode' => $request->pincode,
             'username' => $username,
+            'referral_id' => $referralId,
             'sponsor_id' => $sponsorValue,
+            'sponsor_referral_id' => $sponsorReferralId,
             'role' => 'user',
             'is_active' => true,
         ]);
@@ -101,15 +110,31 @@ class FrontendAuthController extends Controller
         $step5 = microtime(true);
         \Illuminate\Support\Facades\Log::info("Reg: Total took " . ($step5 - $step1) . "s");
 
+
         // Redirect to success page with Sponsor ID in URL
-        $successUrl = route('auth.success') . '?id=' . urlencode($username) . '&name=' . urlencode($user->name);
+        $successUrl = route('auth.success');
         
         return response()->json([
             'success' => true,
             'redirect_url' => $successUrl,
             'sponsor_id' => $username,
+            'referral_id' => $referralId,
+            'user_id' => $username,
+            'user_name' => $user->name,
             'user' => $user,
         ]);
+    }
+
+    /**
+     * Generate a unique 5-digit referral ID
+     */
+    private function generateReferralId()
+    {
+        do {
+            $referralId = str_pad(rand(10000, 99999), 5, '0', STR_PAD_LEFT);
+        } while (\App\Models\User::where('referral_id', $referralId)->exists());
+        
+        return $referralId;
     }
 
     private function generateSponsorId($name)
@@ -166,7 +191,7 @@ class FrontendAuthController extends Controller
 
         if (\Illuminate\Support\Facades\Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('user.dashboard'));
+            return redirect()->intended(route('home'));
         }
 
         return back()->withErrors([
@@ -207,5 +232,14 @@ class FrontendAuthController extends Controller
         $user->save();
 
         return response()->json(['success' => true, 'redirect_url' => route('auth.login')]);
+    }
+
+    public function logout(Request $request)
+    {
+        auth()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('auth.login')->with('success', 'You have been logged out successfully.');
     }
 }

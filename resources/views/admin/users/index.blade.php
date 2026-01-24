@@ -29,7 +29,7 @@
     <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
         <form action="{{ route('admin.users.index') }}" method="GET" class="flex flex-wrap gap-4">
             <div class="flex-1 min-w-[200px]">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search users..."
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, email, referral ID..."
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
             </div>
             <div class="w-40">
@@ -53,11 +53,10 @@
         <table class="w-full">
             <thead class="bg-gray-50">
                 <tr>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">User Name</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Email</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Mobile</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Sponsor ID</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Address</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">User</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Referral ID</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Sponsor</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Registered</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Status</th>
                     <th class="px-6 py-4 text-right text-sm font-semibold text-gray-900">Actions</th>
                 </tr>
@@ -69,34 +68,40 @@
                             <div class="flex items-center gap-3">
                                 <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}"
                                      class="w-10 h-10 rounded-full object-cover">
-                                <div class="font-medium text-gray-900">{{ $user->name }}</div>
+                                <div>
+                                    <div class="font-medium text-gray-900">{{ $user->name }}</div>
+                                    <div class="text-sm text-gray-500">{{ $user->email }}</div>
+                                </div>
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm text-gray-900">{{ $user->email }}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm text-gray-900">{{ $user->mobile ?? 'N/A' }}</div>
-                        </td>
-                        <td class="px-6 py-4" id="sponsor-{{ $user->id }}">
-                            @if($user->username)
-                                <button onclick="viewSponsorInfo({{ $user->id }}, '{{ $user->username }}')" 
-                                        class="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition font-mono font-bold text-sm">
-                                    <i class="fas fa-id-badge"></i>
-                                    <span>{{ $user->username }}</span>
-                                </button>
+                            @if($user->referral_id)
+                                <span class="inline-flex items-center px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg font-mono font-bold text-sm">
+                                    <i class="fas fa-hashtag mr-1 text-xs"></i>
+                                    {{ $user->referral_id }}
+                                </span>
                             @else
-                                <span class="text-gray-400 text-sm">—</span>
+                                <span class="text-gray-400 text-sm">Not assigned</span>
                             @endif
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm text-gray-600">
-                                @if($user->city && $user->state)
-                                    {{ $user->city }}, {{ $user->state }}
-                                @else
-                                    N/A
-                                @endif
-                            </div>
+                            @if($user->sponsor_referral_id)
+                                @php
+                                    $sponsor = $user->sponsorByReferralId;
+                                @endphp
+                                <div class="text-sm">
+                                    <div class="font-mono font-bold text-purple-700">{{ $user->sponsor_referral_id }}</div>
+                                    @if($sponsor)
+                                        <div class="text-gray-600 text-xs">{{ $sponsor->name }}</div>
+                                    @endif
+                                </div>
+                            @else
+                                <span class="text-gray-400 text-sm">No sponsor</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900">{{ $user->created_at->format('M d, Y') }}</div>
+                            <div class="text-xs text-gray-500">{{ $user->created_at->diffForHumans() }}</div>
                         </td>
                         <td class="px-6 py-4">
                             <button type="button" onclick="toggleUserStatus({{ $user->id }})"
@@ -110,8 +115,8 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-end gap-2">
                                 <a href="{{ route('admin.users.show', $user) }}"
-                                   class="p-2 text-green-600 hover:bg-green-50 rounded-lg" title="View">
-                                    <i class="fas fa-eye"></i>
+                                   class="p-2 text-green-600 hover:bg-green-50 rounded-lg" title="View Details & Referral Network">
+                                    <i class="fas fa-network-wired"></i>
                                 </a>
                                 <a href="{{ route('admin.users.edit', $user) }}"
                                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg" title="Edit">
@@ -132,7 +137,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                        <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                             <i class="fas fa-users text-4xl mb-4"></i>
                             <p>No users found.</p>
                         </td>

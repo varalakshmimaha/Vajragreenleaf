@@ -11,7 +11,27 @@ class UserDashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
-        return view('frontend.dashboard.index', compact('user'));
+        
+        // Calculate referral statistics
+        $stats = [
+            'level1' => $user->referrals()->count(),
+            'level2' => 0,
+            'level3' => 0,
+        ];
+        
+        foreach ($user->referrals as $level1) {
+            $stats['level2'] += $level1->referrals()->count();
+            foreach ($level1->referrals as $level2) {
+                $stats['level3'] += $level2->referrals()->count();
+            }
+        }
+        
+        $stats['total'] = $stats['level1'] + $stats['level2'] + $stats['level3'];
+        
+        // Generate referral link
+        $referralLink = url('/register?ref=' . $user->referral_id);
+        
+        return view('frontend.dashboard.index', compact('user', 'stats', 'referralLink'));
     }
 
     public function updateProfile(Request $request)
@@ -22,12 +42,20 @@ class UserDashboardController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'mobile' => 'required|digits:10|unique:users,mobile,' . $user->id,
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'pincode' => 'nullable|string|max:10',
+            'address' => 'nullable|string',
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'mobile' => $request->mobile,
+            'city' => $request->city,
+            'state' => $request->state,
+            'pincode' => $request->pincode,
+            'address' => $request->address,
         ]);
 
         return back()->with('success', 'Profile updated successfully.');

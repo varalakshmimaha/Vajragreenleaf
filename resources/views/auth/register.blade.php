@@ -70,9 +70,16 @@
                         </div>
                     </div>
 
+
                     <!-- Account Security -->
                     <div class="space-y-5">
                         <h3 class="text-lg font-semibold text-white border-b border-white/10 pb-2">Account Security</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Referral ID <span class="text-gray-500 text-xs">(Optional)</span></label>
+                            <input type="text" name="sponsor_id" class="form-input block w-full shadow-sm sm:text-sm py-3 px-4" placeholder="Enter 5-digit referral ID (if you have one)">
+                            <p class="mt-1 text-xs text-gray-400">If someone referred you, enter their 5-digit referral ID</p>
+                        </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-300 mb-1">Password</label>

@@ -179,6 +179,7 @@
         const userIdEl = document.getElementById('userIdDisplay');
         const userNameEl = document.getElementById('userNameDisplay');
         
+        // Display both username-based ID and referral ID
         if (userId) {
             userIdEl.textContent = userId;
         } else {
@@ -193,7 +194,7 @@
         function copySponsorId() {
             const id = userIdEl.textContent;
             navigator.clipboard.writeText(id).then(() => {
-                alert('✅ Sponsor ID copied to clipboard!\n\n' + id);
+                alert('✅ ID copied to clipboard!\n\n' + id);
             }).catch(err => {
                 console.error('Copy failed:', err);
                 // Fallback for older browsers
@@ -203,13 +204,14 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    alert('✅ Sponsor ID copied to clipboard!\n\n' + id);
+                    alert('✅ ID copied to clipboard!\n\n' + id);
                 } catch (err) {
                     alert('❌ Failed to copy. Please copy manually: ' + id);
                 }
                 document.body.removeChild(textArea);
             });
         }
+
 
         // Auto Redirect with longer timer
         let seconds = 8;

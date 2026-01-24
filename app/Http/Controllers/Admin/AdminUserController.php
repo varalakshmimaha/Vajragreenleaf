@@ -29,7 +29,9 @@ class AdminUserController extends Controller
                 $q->where('name', 'like', '%' . $request->search . '%')
                   ->orWhere('email', 'like', '%' . $request->search . '%')
                   ->orWhere('username', 'like', '%' . $request->search . '%')
-                  ->orWhere('sponsor_id', 'like', '%' . $request->search . '%');
+                  ->orWhere('referral_id', 'like', '%' . $request->search . '%')
+                  ->orWhere('sponsor_id', 'like', '%' . $request->search . '%')
+                  ->orWhere('sponsor_referral_id', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -48,8 +50,10 @@ class AdminUserController extends Controller
                     'name' => $u->name,
                     'email' => $u->email,
                     'username' => $u->username,
+                    'referral_id' => $u->referral_id,
                     'sponsor_id' => $u->sponsor_id,
-                    'sponsor_username' => $u->sponsor->username ?? null,
+                    'sponsor_referral_id' => $u->sponsor_referral_id,
+                    'sponsor_name' => $u->sponsorByReferralId->name ?? null,
                     'role' => $u->role,
                     'is_active' => (bool) $u->is_active,
                     'last_login_at' => $u->last_login_at ? $u->last_login_at->toDateTimeString() : null,
@@ -76,8 +80,25 @@ class AdminUserController extends Controller
 
     public function show(User $user)
     {
-        $user->load('sponsor', 'children');
-        return view('admin.users.show', compact('user'));
+        $user->load('sponsor', 'children', 'sponsorByReferralId', 'referrals');
+        
+        // Get referral statistics
+        $stats = [
+            'level1' => $user->referrals()->count(),
+            'level2' => 0,
+            'level3' => 0,
+        ];
+        
+        foreach ($user->referrals as $level1) {
+            $stats['level2'] += $level1->referrals()->count();
+            foreach ($level1->referrals as $level2) {
+                $stats['level3'] += $level2->referrals()->count();
+            }
+        }
+        
+        $stats['total'] = $stats['level1'] + $stats['level2'] + $stats['level3'];
+        
+        return view('admin.users.show', compact('user', 'stats'));
     }
 
     public function store(Request $request)
@@ -262,5 +283,51 @@ class AdminUserController extends Controller
         $user->update($data);
 
         return back()->with('success', 'Profile updated successfully.');
+    }
+
+    /**
+     * Get referral tree for a specific user (API endpoint)
+     */
+    public function getReferralTree(Request $request, User $user)
+    {
+        $maxLevel = $request->query('maxLevel', 3);
+        
+        $referrals = $user->getAllReferrals($maxLevel);
+        $hasMore = $user->hasReferralsBeyondLevel($maxLevel);
+
+        return response()->json([
+            'referralID' => $user->referral_id,
+            'name' => $user->name,
+            'referrals' => $referrals,
+            'hasMore' => $hasMore,
+            'totalDirectReferrals' => $user->referrals()->count(),
+        ]);
+    }
+
+    /**
+     * Get referral statistics for a user
+     */
+    public function getReferralStats(User $user)
+    {
+        $level1Count = $user->referrals()->count();
+        $level2Count = 0;
+        $level3Count = 0;
+        
+        foreach ($user->referrals as $level1) {
+            $level2Count += $level1->referrals()->count();
+            foreach ($level1->referrals as $level2) {
+                $level3Count += $level2->referrals()->count();
+            }
+        }
+
+        $totalReferrals = $level1Count + $level2Count + $level3Count;
+
+        return response()->json([
+            'referralID' => $user->referral_id,
+            'totalReferrals' => $totalReferrals,
+            'level1' => $level1Count,
+            'level2' => $level2Count,
+            'level3' => $level3Count,
+        ]);
     }
 }

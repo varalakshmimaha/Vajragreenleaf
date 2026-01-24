@@ -261,6 +261,8 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     // Users, Roles & Permissions Management
     Route::resource('users', AdminUserController::class);
     Route::post('/users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::get('/users/{user}/referral-tree', [AdminUserController::class, 'getReferralTree'])->name('users.referral-tree');
+    Route::get('/users/{user}/referral-stats', [AdminUserController::class, 'getReferralStats'])->name('users.referral-stats');
     Route::get('/profile', [AdminUserController::class, 'profile'])->name('profile');
     Route::put('/profile', [AdminUserController::class, 'updateProfile'])->name('profile.update');
 
@@ -271,11 +273,10 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 });
 
 // Frontend Auth / Registration
-Route::get('/join', [FrontendAuthController::class, 'showSponsor'])->name('auth.sponsor');
-Route::post('/sponsor/validate', [FrontendAuthController::class, 'validateSponsor'])->name('auth.sponsor.validate');
+Route::get('/join', function() {
+    return redirect()->route('auth.register');
+})->name('auth.sponsor');
 Route::get('/register', [FrontendAuthController::class, 'showRegister'])->name('auth.register');
-Route::post('/send-otp', [FrontendAuthController::class, 'sendOtp'])->name('auth.sendOtp');
-Route::post('/verify-otp', [FrontendAuthController::class, 'verifyOtp'])->name('auth.verifyOtp');
 Route::post('/register', [FrontendAuthController::class, 'register'])->name('auth.register.submit');
 Route::get('/register/success', [FrontendAuthController::class, 'success'])->name('auth.success');
 Route::get('/login', [FrontendAuthController::class, 'showLogin'])->name('auth.login');
@@ -283,11 +284,18 @@ Route::post('/login', [FrontendAuthController::class, 'login'])->name('auth.logi
 Route::get('/password/forgot', [FrontendAuthController::class, 'showForgot'])->name('auth.forgot');
 Route::post('/password/verify', [FrontendAuthController::class, 'verifyUser'])->name('auth.forgot.verify');
 Route::post('/password/forgot', [FrontendAuthController::class, 'sendReset'])->name('auth.forgot.submit');
+Route::post('/logout', [FrontendAuthController::class, 'logout'])->name('logout');
+
 // User Dashboard (Authenticated)
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\UserDashboardController::class, 'index'])->name('dashboard');
     Route::put('/profile', [\App\Http\Controllers\UserDashboardController::class, 'updateProfile'])->name('profile.update');
     Route::put('/password', [\App\Http\Controllers\UserDashboardController::class, 'updatePassword'])->name('password.update');
+    
+    // Referral System Routes
+    Route::get('/referrals', [\App\Http\Controllers\ReferralController::class, 'dashboard'])->name('referrals.dashboard');
+    Route::get('/referrals/tree', [\App\Http\Controllers\ReferralController::class, 'getReferralTree'])->name('referrals.tree');
+    Route::get('/referrals/stats', [\App\Http\Controllers\ReferralController::class, 'getReferralStats'])->name('referrals.stats');
 });
 
 // Dynamic Page Route (must be last)

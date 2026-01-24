@@ -31,14 +31,14 @@
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                 </div>
                 <h2 class="text-3xl font-bold tracking-tight text-white mb-2">Join Our Community</h2>
-                <p class="text-sm text-gray-400">Please enter your Sponsor ID to continue</p>
+                <p class="text-sm text-gray-400">Enter your Sponsor ID or skip to continue (Optional)</p>
             </div>
 
             <form id="sponsorForm" class="mt-8 space-y-6" onsubmit="return false;">
                 <div>
-                    <label for="sponsor_id" class="block text-sm font-medium leading-6 text-gray-300">Sponsor ID</label>
+                    <label for="sponsor_id" class="block text-sm font-medium leading-6 text-gray-300">Sponsor ID <span class="text-gray-500 font-normal">(Optional)</span></label>
                     <div class="mt-2 relative">
-                        <input id="sponsor_id" name="sponsor_id" type="text" required class="block w-full rounded-xl border-0 bg-white/5 py-3.5 px-4 text-white shadow-sm ring-1 ring-inset ring-white/10 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-purple-500 sm:text-sm sm:leading-6 transition-all" placeholder="e.g. USER123">
+                        <input id="sponsor_id" name="sponsor_id" type="text" class="block w-full rounded-xl border-0 bg-white/5 py-3.5 px-4 text-white shadow-sm ring-1 ring-inset ring-white/10 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-purple-500 sm:text-sm sm:leading-6 transition-all" placeholder="e.g. USER123 (Optional)">
                         <div id="loader" class="absolute right-4 top-3.5 hidden">
                             <svg class="animate-spin h-5 w-5 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="space-y-3">
                     <button type="submit" id="submitBtn" class="flex w-full justify-center rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-3 py-3.5 text-sm font-semibold leading-6 text-white shadow-lg hover:from-purple-500 hover:to-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
                         Verify Sponsor
                     </button>
@@ -74,6 +74,10 @@
                     <a href="#" id="continueBtn" class="hidden flex w-full justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-3 py-3.5 text-sm font-semibold leading-6 text-white shadow-lg hover:from-emerald-400 hover:to-teal-400 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
                         Continue to Registration &rarr;
                     </a>
+                    
+                    <button type="button" id="skipBtn" class="flex w-full justify-center rounded-xl border-2 border-white/20 bg-transparent px-3 py-3.5 text-sm font-semibold leading-6 text-gray-300 hover:bg-white/5 hover:border-white/30 hover:text-white transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                        Skip - Continue Without Sponsor
+                    </button>
                 </div>
             </form>
             
@@ -127,7 +131,9 @@
                    details.classList.remove('hidden');
                    submitBtn.classList.add('hidden');
                    continueBtn.classList.remove('hidden');
-                   continueBtn.href = "{{ route('auth.register') }}?sponsor=" + encodeURIComponent(val);
+                   // Use referral_id if available, otherwise fall back to input value
+                   const sponsorId = data.referral_id || val;
+                   continueBtn.href = "{{ route('auth.register') }}?sponsor=" + encodeURIComponent(sponsorId);
                    
                    input.classList.add('border-green-500', 'text-green-500');
                    // Animate
@@ -154,6 +160,12 @@
              continueBtn.classList.add('hidden');
              details.classList.add('hidden');
              input.classList.remove('border-green-500', 'text-green-500');
+        });
+
+        // Skip Button - Allow registration without sponsor
+        const skipBtn = document.getElementById('skipBtn');
+        skipBtn.addEventListener('click', () => {
+            window.location.href = "{{ route('auth.register') }}";
         });
     </script>
 </body>

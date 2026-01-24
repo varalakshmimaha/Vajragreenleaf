@@ -19,6 +19,8 @@ class User extends Authenticatable
         'mobile',
         'username',
         'sponsor_id',
+        'referral_id',
+        'sponsor_referral_id',
         'address',
         'state',
         'city',
@@ -295,13 +297,84 @@ class User extends Authenticatable
         return "https://www.gravatar.com/avatar/{$hash}?d=mp&s=150";
     }
 
+    /**
+     * Get the sponsor (referrer) of this user
+     */
     public function sponsor()
     {
         return $this->belongsTo(User::class, 'sponsor_id', 'username');
     }
 
+    /**
+     * Get the sponsor by referral ID (new system)
+     */
+    public function sponsorByReferralId()
+    {
+        return $this->belongsTo(User::class, 'sponsor_referral_id', 'referral_id');
+    }
+
+    /**
+     * Get users directly referred by this user (using username - legacy)
+     */
     public function children()
     {
         return $this->hasMany(User::class, 'sponsor_id', 'username');
+    }
+
+    /**
+     * Get users directly referred by this user (using referral_id - new system)
+     */
+    public function referrals()
+    {
+        return $this->hasMany(User::class, 'sponsor_referral_id', 'referral_id');
+    }
+
+    /**
+     * Get all referrals recursively (multilevel tree)
+     */
+    public function getAllReferrals($maxLevel = null, $currentLevel = 1)
+    {
+        $directReferrals = $this->referrals()->with(['referrals'])->get();
+        
+        $result = [];
+        foreach ($directReferrals as $referral) {
+            $referralData = [
+                'referralID' => $referral->referral_id,
+                'name' => $referral->name,
+                'email' => $referral->email,
+                'level' => $currentLevel,
+                'created_at' => $referral->created_at,
+                'children' => []
+            ];
+            
+            // Recursively get children if not at max level
+            if ($maxLevel === null || $currentLevel < $maxLevel) {
+                $children = $referral->getAllReferrals($maxLevel, $currentLevel + 1);
+                $referralData['children'] = $children;
+            }
+            
+            $result[] = $referralData;
+        }
+        
+        return $result;
+    }
+
+    /**
+     * Check if user has referrals beyond a certain level
+     */
+    public function hasReferralsBeyondLevel($level)
+    {
+        if ($level <= 0) {
+            return $this->referrals()->count() > 0;
+        }
+        
+        $directReferrals = $this->referrals;
+        foreach ($directReferrals as $referral) {
+            if ($referral->hasReferralsBeyondLevel($level - 1)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

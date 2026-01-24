@@ -71,6 +71,7 @@
                     </div>
                 </div>
 
+                @if(!isset($user))
                 <!-- Roles -->
                 <div class="bg-white rounded-xl shadow-sm p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Assign Roles</h2>
@@ -97,7 +98,9 @@
                         @endforeach
                     </div>
                 </div>
+                @endif
 
+                @if(!isset($user))
                 <!-- Direct Permissions -->
                 <div class="bg-white rounded-xl shadow-sm p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Additional Permissions</h2>
@@ -127,6 +130,7 @@
                         @endforeach
                     </div>
                 </div>
+                @endif
             </div>
 
             <!-- Sidebar -->
