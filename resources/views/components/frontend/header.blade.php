@@ -40,9 +40,35 @@
                     @endforeach
                 @endif
 
-                <a href="{{ route('contact') }}" class="gradient-primary text-white px-6 py-2.5 rounded-full hover:shadow-lg hover:scale-105 transition-all duration-300 font-medium">
-                    Get Started
-                </a>
+                <div class="flex items-center ml-4">
+                    @auth
+                        <div class="relative group" x-data="{ open: false }">
+                            <button @click="open = !open" class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all shadow-sm border border-primary/20">
+                                <i class="fas fa-user"></i>
+                            </button>
+                            <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50">
+                                <div class="px-4 py-2 border-b border-gray-50 flex items-center space-x-2">
+                                    <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">
+                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <p class="text-xs font-bold text-gray-900 truncate">{{ Auth::user()->name }}</p>
+                                        <p class="text-[10px] text-gray-400 truncate">{{ Auth::user()->username }}</p>
+                                    </div>
+                                </div>
+                                <a href="{{ route('user.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Dashboard</a>
+                                <form action="{{ route('admin.logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Logout</button>
+                                </form>
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('auth.login') }}" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all shadow-sm border border-gray-100 group" title="Login / Register">
+                            <i class="fas fa-user-circle text-xl group-hover:scale-110 transition-transform"></i>
+                        </a>
+                    @endauth
+                </div>
             </div>
 
             <!-- Mobile Menu Button -->
@@ -76,9 +102,29 @@
                 <a href="{{ route('gallery.index') }}" class="text-gray-700 hover:text-primary transition-colors font-medium py-2 {{ request()->routeIs('gallery.*') ? 'text-primary' : '' }}">
                     Gallery
                 </a>
-                <a href="{{ route('contact') }}" class="gradient-primary text-white px-6 py-2.5 rounded-full text-center font-medium mt-4">
-                    Get Started
-                </a>
+                
+                <div class="flex flex-col space-y-3 mt-2 pt-3 border-t border-gray-100">
+                    @auth
+                        <div class="flex items-center space-x-3 p-2 bg-gray-50 rounded-xl">
+                            <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-900">{{ Auth::user()->name }}</p>
+                                <p class="text-xs text-gray-500">{{ Auth::user()->username }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('user.dashboard') }}" class="text-center font-bold py-2 rounded-xl border border-gray-200 text-gray-700">Go to Dashboard</a>
+                        <form action="{{ route('admin.logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full text-center font-bold py-2 rounded-xl text-red-600 bg-red-50 transition-colors">Logout</button>
+                        </form>
+                    @else
+                        <a href="{{ route('auth.login') }}" class="text-center text-white gradient-primary font-bold py-3 rounded-xl shadow-lg transition-all active:scale-95">
+                            Login / Register
+                        </a>
+                    @endauth
+                </div>
             </div>
         </div>
     </nav>

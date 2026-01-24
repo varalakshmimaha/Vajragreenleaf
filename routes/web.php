@@ -7,6 +7,10 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CertificationController;
+use App\Http\Controllers\AwardController;
+use App\Http\Controllers\VideoController;
+use App\Http\Controllers\BankerController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -34,6 +38,8 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\FrontendAuthController;
+
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -46,6 +52,27 @@ Route::post('/services/enquiry', [ServiceController::class, 'enquiry'])->name('s
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products/enquiry', [ProductController::class, 'enquiry'])->name('products.enquiry');
+
+// Certifications
+Route::get('/certifications', [CertificationController::class, 'index'])->name('certifications.index');
+Route::get('/certification', [CertificationController::class, 'index']);
+Route::get('/Certifications', [CertificationController::class, 'index']);
+
+// Awards
+Route::get('/awards', [AwardController::class, 'index'])->name('awards.index');
+Route::get('/awards-and-rewards', [AwardController::class, 'index']);
+Route::get('/Awards-and-Rewards', [AwardController::class, 'index']);
+Route::get('/Awards', [AwardController::class, 'index']);
+
+// Videos
+Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
+Route::get('/Videos', [VideoController::class, 'index']);
+
+// Bankers
+Route::get('/bankers', [BankerController::class, 'index'])->name('bankers.index');
+Route::get('/our-bankers', [BankerController::class, 'index']);
+Route::get('/Our-Bankers', [BankerController::class, 'index']);
+Route::get('/Our%20Bankers', [BankerController::class, 'index']);
 
 // Portfolio
 Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
@@ -198,6 +225,22 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::put('/gallery-categories/{category}', [AdminGalleryController::class, 'updateCategory'])->name('gallery.categories.update');
     Route::delete('/gallery-categories/{category}', [AdminGalleryController::class, 'destroyCategory'])->name('gallery.categories.destroy');
 
+    // Certifications
+    Route::post('certifications/bulk-action', [\App\Http\Controllers\Admin\CertificationController::class, 'bulkAction'])->name('certifications.bulk');
+    Route::resource('certifications', \App\Http\Controllers\Admin\CertificationController::class);
+
+    // Awards
+    Route::post('awards/bulk-action', [\App\Http\Controllers\Admin\AwardController::class, 'bulkAction'])->name('awards.bulk');
+    Route::resource('awards', \App\Http\Controllers\Admin\AwardController::class);
+
+    // Videos
+    Route::post('videos/bulk-action', [\App\Http\Controllers\Admin\VideoController::class, 'bulkAction'])->name('videos.bulk');
+    Route::resource('videos', \App\Http\Controllers\Admin\VideoController::class);
+
+    // Bankers
+    Route::post('bankers/bulk-action', [\App\Http\Controllers\Admin\BankerController::class, 'bulkAction'])->name('bankers.bulk');
+    Route::resource('bankers', \App\Http\Controllers\Admin\BankerController::class);
+
     // Sections
     Route::resource('sections', SectionController::class);
     Route::post('/sections/{section}/duplicate', [SectionController::class, 'duplicate'])->name('sections.duplicate');
@@ -225,6 +268,26 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 
     Route::resource('permissions', PermissionController::class);
     Route::get('/permissions-seed', [PermissionController::class, 'seedDefaults'])->name('permissions.seed');
+});
+
+// Frontend Auth / Registration
+Route::get('/join', [FrontendAuthController::class, 'showSponsor'])->name('auth.sponsor');
+Route::post('/sponsor/validate', [FrontendAuthController::class, 'validateSponsor'])->name('auth.sponsor.validate');
+Route::get('/register', [FrontendAuthController::class, 'showRegister'])->name('auth.register');
+Route::post('/send-otp', [FrontendAuthController::class, 'sendOtp'])->name('auth.sendOtp');
+Route::post('/verify-otp', [FrontendAuthController::class, 'verifyOtp'])->name('auth.verifyOtp');
+Route::post('/register', [FrontendAuthController::class, 'register'])->name('auth.register.submit');
+Route::get('/register/success', [FrontendAuthController::class, 'success'])->name('auth.success');
+Route::get('/login', [FrontendAuthController::class, 'showLogin'])->name('auth.login');
+Route::post('/login', [FrontendAuthController::class, 'login'])->name('auth.login.submit');
+Route::get('/password/forgot', [FrontendAuthController::class, 'showForgot'])->name('auth.forgot');
+Route::post('/password/verify', [FrontendAuthController::class, 'verifyUser'])->name('auth.forgot.verify');
+Route::post('/password/forgot', [FrontendAuthController::class, 'sendReset'])->name('auth.forgot.submit');
+// User Dashboard (Authenticated)
+Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\UserDashboardController::class, 'index'])->name('dashboard');
+    Route::put('/profile', [\App\Http\Controllers\UserDashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/password', [\App\Http\Controllers\UserDashboardController::class, 'updatePassword'])->name('password.update');
 });
 
 // Dynamic Page Route (must be last)

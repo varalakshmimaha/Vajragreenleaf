@@ -22,18 +22,14 @@ class AdminUserController extends Controller
 
     public function index(Request $request)
     {
-        $query = User::with('roles');
+        $query = User::query();
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('email', 'like', '%' . $request->search . '%');
-            });
-        }
-
-        if ($request->filled('role')) {
-            $query->whereHas('roles', function ($q) use ($request) {
-                $q->where('roles.id', $request->role);
+                  ->orWhere('email', 'like', '%' . $request->search . '%')
+                  ->orWhere('username', 'like', '%' . $request->search . '%')
+                  ->orWhere('sponsor_id', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -41,10 +37,33 @@ class AdminUserController extends Controller
             $query->where('is_active', $request->status === 'active');
         }
 
-        $users = $query->orderBy('created_at', 'desc')->paginate(20);
-        $roles = Role::active()->get();
+        // eager load sponsor to avoid N+1 and allow showing sponsor details
+        $users = $query->with('sponsor')->orderBy('created_at', 'desc')->paginate(20);
 
-        return view('admin.users.index', compact('users', 'roles'));
+        // If AJAX/json requested, return a lightweight JSON payload for polling
+        if ($request->query('ajax') || $request->wantsJson()) {
+            $data = $users->map(function ($u) {
+                return [
+                    'id' => $u->id,
+                    'name' => $u->name,
+                    'email' => $u->email,
+                    'username' => $u->username,
+                    'sponsor_id' => $u->sponsor_id,
+                    'sponsor_username' => $u->sponsor->username ?? null,
+                    'role' => $u->role,
+                    'is_active' => (bool) $u->is_active,
+                    'last_login_at' => $u->last_login_at ? $u->last_login_at->toDateTimeString() : null,
+                ];
+            });
+
+            return response()->json([
+                'data' => $data,
+                'current_page' => $users->currentPage(),
+                'last_page' => $users->lastPage(),
+            ]);
+        }
+
+        return view('admin.users.index', compact('users'));
     }
 
     public function create()
@@ -53,6 +72,12 @@ class AdminUserController extends Controller
         $permissions = Permission::getAllGrouped();
 
         return view('admin.users.form', compact('roles', 'permissions'));
+    }
+
+    public function show(User $user)
+    {
+        $user->load('sponsor', 'children');
+        return view('admin.users.show', compact('user'));
     }
 
     public function store(Request $request)

@@ -34,8 +34,8 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Price *</label>
-                            <input type="number" name="price" value="{{ old('price', $product->price ?? '') }}" step="0.01" required
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Price</label>
+                            <input type="number" name="price" value="{{ old('price', $product->price ?? '') }}" step="0.01"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
@@ -53,8 +53,38 @@
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Full Description</label>
-                        <textarea name="description" rows="8" id="description-editor"
+                        <textarea name="description" rows="5" id="description-editor"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ old('description', $product->description ?? '') }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Key Benefits</label>
+                        <textarea name="key_benefits" rows="5" id="key-benefits-editor"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ old('key_benefits', $product->key_benefits ?? '') }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Directions</label>
+                        <textarea name="directions" rows="4" id="directions-editor"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ old('directions', $product->directions ?? '') }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Actions & Indications</label>
+                        <textarea name="actions_indications" rows="4" id="actions-editor"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ old('actions_indications', $product->actions_indications ?? '') }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Method of Use</label>
+                        <textarea name="method_of_use" rows="4" id="method-editor"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ old('method_of_use', $product->method_of_use ?? '') }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Dosage</label>
+                        <textarea name="dosage" rows="4" id="dosage-editor"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ old('dosage', $product->dosage ?? '') }}</textarea>
                     </div>
                 </div>
 
@@ -215,9 +245,20 @@
 @push('scripts')
 <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 <script>
-    ClassicEditor
-        .create(document.querySelector('#description-editor'))
-        .catch(error => console.error(error));
+    const editors = [
+        '#description-editor', 
+        '#key-benefits-editor', 
+        '#directions-editor', 
+        '#actions-editor', 
+        '#method-editor', 
+        '#dosage-editor'
+    ];
+
+    editors.forEach(selector => {
+        ClassicEditor
+            .create(document.querySelector(selector))
+            .catch(error => console.error(error));
+    });
 
     let featureIndex = {{ count($features ?? []) }};
 

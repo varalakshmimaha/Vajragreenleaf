@@ -16,8 +16,16 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'mobile',
+        'username',
+        'sponsor_id',
+        'address',
+        'state',
+        'city',
+        'pincode',
         'avatar',
         'is_active',
+        'role',
         'last_login_at',
     ];
 
@@ -86,6 +94,12 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
+        // Respect legacy `role` column (string) for backwards compatibility
+        $roleCol = strtolower($this->role ?? '');
+        if (in_array($roleCol, ['super-admin', 'admin'], true)) {
+            return true;
+        }
+
         return $this->roles()->whereIn('slug', ['super-admin', 'admin'])->exists()
             || $this->isSuperAdmin();
     }
@@ -279,5 +293,15 @@ class User extends Authenticatable
         // Return gravatar or default avatar
         $hash = md5(strtolower(trim($this->email)));
         return "https://www.gravatar.com/avatar/{$hash}?d=mp&s=150";
+    }
+
+    public function sponsor()
+    {
+        return $this->belongsTo(User::class, 'sponsor_id', 'username');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(User::class, 'sponsor_id', 'username');
     }
 }

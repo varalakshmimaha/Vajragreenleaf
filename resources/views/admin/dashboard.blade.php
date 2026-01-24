@@ -9,7 +9,24 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm text-gray-500">Users</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $stats['users'] }}</p>
+                </div>
+            </div>
+            <a href="{{ route('admin.users.index') }}" class="mt-4 block text-sm text-purple-600 hover:text-purple-800 font-medium">
+                Manage Users →
+            </a>
+        </div>
+
         <div class="bg-white rounded-xl shadow-sm p-6">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -38,19 +55,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm p-6">
-            <div class="flex items-center">
-                <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                    </svg>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm text-gray-500">Portfolio Items</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $stats['portfolios'] }}</p>
-                </div>
-            </div>
-        </div>
+
 
         <div class="bg-white rounded-xl shadow-sm p-6">
             <div class="flex items-center">
@@ -69,21 +74,7 @@
 
     <!-- Pending Items -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-xl shadow-sm p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-semibold text-gray-900">Service Enquiries</h3>
-                <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-medium">{{ $stats['service_enquiries'] }} pending</span>
-            </div>
-            <a href="{{ route('admin.enquiries.index', ['type' => 'service']) }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View All →</a>
-        </div>
 
-        <div class="bg-white rounded-xl shadow-sm p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-semibold text-gray-900">Product Enquiries</h3>
-                <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-medium">{{ $stats['product_enquiries'] }} pending</span>
-            </div>
-            <a href="{{ route('admin.enquiries.index', ['type' => 'product']) }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View All →</a>
-        </div>
 
         <div class="bg-white rounded-xl shadow-sm p-6">
             <div class="flex items-center justify-between mb-4">
@@ -95,30 +86,8 @@
     </div>
 
     <!-- Recent Activity -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Recent Enquiries -->
-        <div class="bg-white rounded-xl shadow-sm">
-            <div class="px-6 py-4 border-b">
-                <h3 class="font-semibold text-gray-900">Recent Service Enquiries</h3>
-            </div>
-            <div class="p-6">
-                @if($recentEnquiries->count() > 0)
-                    <div class="space-y-4">
-                        @foreach($recentEnquiries as $enquiry)
-                            <div class="flex items-center justify-between py-3 border-b last:border-0">
-                                <div>
-                                    <p class="font-medium text-gray-900">{{ $enquiry->mobile }}</p>
-                                    <p class="text-sm text-gray-500">{{ $enquiry->service?->name ?? 'N/A' }}</p>
-                                </div>
-                                <span class="text-xs text-gray-400">{{ $enquiry->created_at->diffForHumans() }}</span>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <p class="text-gray-500 text-center py-4">No recent enquiries</p>
-                @endif
-            </div>
-        </div>
+    <div class="grid grid-cols-1 gap-6">
+
 
         <!-- Recent Contacts -->
         <div class="bg-white rounded-xl shadow-sm">

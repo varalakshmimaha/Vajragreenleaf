@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Admin Dashboard') - IT Business CMS</title>
+    <title>@yield('title', 'Admin Dashboard') - Vajra green leaf</title>
 
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,7 +29,7 @@
             <div class="h-full flex flex-col">
                 <!-- Logo -->
                 <div class="p-4 border-b border-gray-800">
-                    <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold">IT Business CMS</a>
+                    <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold">Vajra green leaf</a>
                 </div>
 
                 <!-- Navigation -->
@@ -92,12 +92,7 @@
                             </a>
                         </li>
 
-                        <li>
-                            <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-4 py-3 hover:bg-gray-800 {{ request()->routeIs('admin.portfolios.*') ? 'bg-gray-800 border-l-4 border-blue-500' : '' }}">
-                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                                Portfolio
-                            </a>
-                        </li>
+
 
                         <li>
                             <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-4 py-3 hover:bg-gray-800 {{ request()->routeIs('admin.blogs.*') ? 'bg-gray-800 border-l-4 border-blue-500' : '' }}">
@@ -139,6 +134,34 @@
                         </li>
 
                         <li>
+                            <a href="{{ route('admin.certifications.index') }}" class="flex items-center px-4 py-3 hover:bg-gray-800 {{ request()->routeIs('admin.certifications.*') ? 'bg-gray-800 border-l-4 border-blue-500' : '' }}">
+                                <i class="fas fa-certificate w-5 h-5 mr-3 flex items-center justify-center"></i>
+                                Certifications
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('admin.awards.index') }}" class="flex items-center px-4 py-3 hover:bg-gray-800 {{ request()->routeIs('admin.awards.*') ? 'bg-gray-800 border-l-4 border-blue-500' : '' }}">
+                                <i class="fas fa-trophy w-5 h-5 mr-3 flex items-center justify-center"></i>
+                                Awards & Rewards
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('admin.videos.index') }}" class="flex items-center px-4 py-3 hover:bg-gray-800 {{ request()->routeIs('admin.videos.*') ? 'bg-gray-800 border-l-4 border-blue-500' : '' }}">
+                                <i class="fas fa-video w-5 h-5 mr-3 flex items-center justify-center"></i>
+                                Videos
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('admin.bankers.index') }}" class="flex items-center px-4 py-3 hover:bg-gray-800 {{ request()->routeIs('admin.bankers.*') ? 'bg-gray-800 border-l-4 border-blue-500' : '' }}">
+                                <i class="fas fa-university w-5 h-5 mr-3 flex items-center justify-center"></i>
+                                Our Bankers
+                            </a>
+                        </li>
+
+                        <li>
                             <a href="{{ route('admin.clients.index') }}" class="flex items-center px-4 py-3 hover:bg-gray-800 {{ request()->routeIs('admin.clients.*') ? 'bg-gray-800 border-l-4 border-blue-500' : '' }}">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                                 Clients
@@ -163,19 +186,7 @@
                             <span class="px-4 text-xs font-semibold text-gray-500 uppercase">Enquiries</span>
                         </li>
 
-                        <li>
-                            <a href="{{ route('admin.enquiries.index', ['type' => 'service']) }}" class="flex items-center px-4 py-3 hover:bg-gray-800 {{ request()->get('type') == 'service' ? 'bg-gray-800 border-l-4 border-blue-500' : '' }}">
-                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                                Service Enquiries
-                            </a>
-                        </li>
 
-                        <li>
-                            <a href="{{ route('admin.enquiries.index', ['type' => 'product']) }}" class="flex items-center px-4 py-3 hover:bg-gray-800 {{ request()->get('type') == 'product' ? 'bg-gray-800 border-l-4 border-blue-500' : '' }}">
-                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                                Product Enquiries
-                            </a>
-                        </li>
 
                         <li>
                             <a href="{{ route('admin.enquiries.index', ['type' => 'contact']) }}" class="flex items-center px-4 py-3 hover:bg-gray-800 {{ request()->get('type') == 'contact' ? 'bg-gray-800 border-l-4 border-blue-500' : '' }}">

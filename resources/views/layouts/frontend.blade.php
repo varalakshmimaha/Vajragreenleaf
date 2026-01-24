@@ -17,7 +17,12 @@
 
     <!-- Favicon -->
     @if(!empty($siteSettings['favicon']))
-        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $siteSettings['favicon']) }}">
+        @php
+            $faviconUrl = asset('storage/' . $siteSettings['favicon']);
+            $ext = pathinfo($siteSettings['favicon'], PATHINFO_EXTENSION);
+            $type = $ext == 'ico' ? 'image/x-icon' : 'image/' . $ext;
+        @endphp
+        <link rel="icon" type="{{ $type }}" href="{{ $faviconUrl }}">
     @endif
 
     <!-- Google Fonts -->
@@ -33,10 +38,17 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <!-- Theme CSS Variables -->
     @if($activeTheme)
         <style>{!! $activeTheme->getCssVariables() !!}</style>
     @endif
+
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>

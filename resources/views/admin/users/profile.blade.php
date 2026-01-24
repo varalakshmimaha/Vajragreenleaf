@@ -137,6 +137,30 @@
                     </div>
                 </div>
 
+                <!-- Sponsor Info -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Sponsor Information</h2>
+
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">My Sponsor ID:</span>
+                            <span class="text-gray-900 font-medium">{{ $user->username ?? '—' }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Sponsor (referred by):</span>
+                            <span class="text-gray-900">
+                                @if($user->sponsor)
+                                    {{ $user->sponsor->username ?? $user->sponsor->name }}
+                                @elseif($user->sponsor_id)
+                                    {{ $user->sponsor_id }}
+                                @else
+                                    —
+                                @endif
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Save Button -->
                 <div class="bg-white rounded-xl shadow-sm p-6">
                     <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-medium">

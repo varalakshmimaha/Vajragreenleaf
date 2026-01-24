@@ -10,30 +10,24 @@ use App\Models\Product;
 use App\Models\ProductEnquiry;
 use App\Models\Service;
 use App\Models\ServiceEnquiry;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         $stats = [
+            'users' => User::count(),
             'services' => Service::count(),
             'products' => Product::count(),
-            'portfolios' => Portfolio::count(),
             'blogs' => Blog::count(),
-            'service_enquiries' => ServiceEnquiry::pending()->count(),
-            'product_enquiries' => ProductEnquiry::pending()->count(),
             'contact_submissions' => ContactSubmission::new()->count(),
         ];
-
-        $recentEnquiries = ServiceEnquiry::with('service')
-            ->latest()
-            ->take(5)
-            ->get();
 
         $recentContacts = ContactSubmission::latest()
             ->take(5)
             ->get();
 
-        return view('admin.dashboard', compact('stats', 'recentEnquiries', 'recentContacts'));
+        return view('admin.dashboard', compact('stats', 'recentContacts'));
     }
 }

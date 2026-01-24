@@ -32,16 +32,6 @@
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search users..."
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
             </div>
-            <div class="w-48">
-                <select name="role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    <option value="">All Roles</option>
-                    @foreach($roles as $role)
-                        <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>
-                            {{ $role->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
             <div class="w-40">
                 <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                     <option value="">All Status</option>
@@ -63,10 +53,12 @@
         <table class="w-full">
             <thead class="bg-gray-50">
                 <tr>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">User</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Roles</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">User Name</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Email</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Mobile</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Sponsor ID</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Address</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Status</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Last Login</th>
                     <th class="px-6 py-4 text-right text-sm font-semibold text-gray-900">Actions</th>
                 </tr>
             </thead>
@@ -74,27 +66,35 @@
                 @forelse($users as $user)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4">
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-3">
                                 <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}"
-                                     class="w-12 h-12 rounded-full object-cover">
-                                <div>
-                                    <div class="font-medium text-gray-900">{{ $user->name }}</div>
-                                    <div class="text-sm text-gray-500">{{ $user->email }}</div>
-                                    @if($user->phone)
-                                        <div class="text-xs text-gray-400">{{ $user->phone }}</div>
-                                    @endif
-                                </div>
+                                     class="w-10 h-10 rounded-full object-cover">
+                                <div class="font-medium text-gray-900">{{ $user->name }}</div>
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex flex-wrap gap-1">
-                                @foreach($user->roles as $role)
-                                    <span class="px-2 py-1 text-xs rounded-full {{ $role->is_super_admin ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
-                                        {{ $role->name }}
-                                    </span>
-                                @endforeach
-                                @if($user->roles->count() === 0)
-                                    <span class="text-gray-400 text-sm">No roles</span>
+                            <div class="text-sm text-gray-900">{{ $user->email }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900">{{ $user->mobile ?? 'N/A' }}</div>
+                        </td>
+                        <td class="px-6 py-4" id="sponsor-{{ $user->id }}">
+                            @if($user->username)
+                                <button onclick="viewSponsorInfo({{ $user->id }}, '{{ $user->username }}')" 
+                                        class="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition font-mono font-bold text-sm">
+                                    <i class="fas fa-id-badge"></i>
+                                    <span>{{ $user->username }}</span>
+                                </button>
+                            @else
+                                <span class="text-gray-400 text-sm">—</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-600">
+                                @if($user->city && $user->state)
+                                    {{ $user->city }}, {{ $user->state }}
+                                @else
+                                    N/A
                                 @endif
                             </div>
                         </td>
@@ -107,15 +107,12 @@
                                 {{ $user->is_active ? 'Active' : 'Inactive' }}
                             </button>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">
-                            @if($user->last_login_at)
-                                {{ $user->last_login_at->diffForHumans() }}
-                            @else
-                                Never
-                            @endif
-                        </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-end gap-2">
+                                <a href="{{ route('admin.users.show', $user) }}"
+                                   class="p-2 text-green-600 hover:bg-green-50 rounded-lg" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </a>
                                 <a href="{{ route('admin.users.edit', $user) }}"
                                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg" title="Edit">
                                     <i class="fas fa-edit"></i>
@@ -135,7 +132,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
                             <i class="fas fa-users text-4xl mb-4"></i>
                             <p>No users found.</p>
                         </td>
@@ -171,5 +168,45 @@ function toggleUserStatus(userId) {
         }
     });
 }
+
+function viewSponsorInfo(userId, sponsorId) {
+    window.location.href = `/admin/users/${userId}`;
+}
+</script>
+@endpush
+
+@push('scripts')
+<script>
+// Poll for updates every 8 seconds and update sponsor cells
+(function() {
+    const interval = 8000;
+    async function fetchUpdates() {
+        try {
+            const res = await fetch(window.location.pathname + '?ajax=1', { headers: { 'Accept': 'application/json' } });
+            if (!res.ok) return;
+            const json = await res.json();
+            if (!json.data) return;
+            json.data.forEach(u => {
+                const el = document.getElementById('sponsor-' + u.id);
+                if (!el) return;
+                // Decide displayed value: sponsor_username || sponsor_id || username || em dash
+                const val = u.sponsor_username || u.sponsor_id || u.username || '—';
+                // Update inner text of the primary span
+                const span = el.querySelector('span');
+                if (span && span.textContent !== val) {
+                    span.textContent = val;
+                }
+            });
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    // Start polling after short delay
+    setTimeout(() => {
+        fetchUpdates();
+        setInterval(fetchUpdates, interval);
+    }, 2000);
+})();
 </script>
 @endpush

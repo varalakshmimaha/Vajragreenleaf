@@ -32,25 +32,19 @@ class SettingsController extends Controller
             'footer_text' => 'nullable|string',
         ]);
 
-        if ($request->hasFile('logo')) {
-            $this->fileUploadService->delete($this->settingsService->get('logo'));
-            $data['logo'] = $this->fileUploadService->upload($request->file('logo'), 'settings');
-        }
-
-        if ($request->hasFile('logo_light')) {
-            $this->fileUploadService->delete($this->settingsService->get('logo_light'));
-            $data['logo_light'] = $this->fileUploadService->upload($request->file('logo_light'), 'settings');
-        }
-
-        if ($request->hasFile('favicon')) {
-            $this->fileUploadService->delete($this->settingsService->get('favicon'));
-            $data['favicon'] = $this->fileUploadService->upload($request->file('favicon'), 'settings');
-        }
-
-        foreach ($data as $key => $value) {
-            if (!$request->hasFile($key) || $value) {
-                $this->settingsService->set($key, $value, 'general');
+        $fileFields = ['logo', 'logo_light', 'favicon'];
+        
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                $this->fileUploadService->delete($this->settingsService->get($field));
+                $path = $this->fileUploadService->upload($request->file($field), 'settings');
+                $this->settingsService->set($field, $path, 'general');
             }
+        }
+
+        $otherFields = $request->except(array_merge(['_token'], $fileFields));
+        foreach ($otherFields as $key => $value) {
+            $this->settingsService->set($key, $value, 'general');
         }
 
         return back()->with('success', 'General settings updated successfully.');
@@ -76,13 +70,13 @@ class SettingsController extends Controller
 
         if ($request->hasFile('og_image')) {
             $this->fileUploadService->delete($this->settingsService->get('og_image'));
-            $data['og_image'] = $this->fileUploadService->upload($request->file('og_image'), 'settings');
+            $path = $this->fileUploadService->upload($request->file('og_image'), 'settings');
+            $this->settingsService->set('og_image', $path, 'seo');
         }
 
-        foreach ($data as $key => $value) {
-            if (!$request->hasFile($key) || $value) {
-                $this->settingsService->set($key, $value, 'seo');
-            }
+        $otherFields = $request->except(['_token', 'og_image']);
+        foreach ($otherFields as $key => $value) {
+            $this->settingsService->set($key, $value, 'seo');
         }
 
         return back()->with('success', 'SEO settings updated successfully.');

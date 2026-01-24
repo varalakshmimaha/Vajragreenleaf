@@ -4,206 +4,112 @@
 @section('meta_description', $product->meta_description ?? $product->short_description)
 
 @section('content')
-    <!-- Product Hero -->
-    <section class="gradient-primary py-20 relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10">
-            <div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
-            <div class="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-        </div>
-        <div class="container mx-auto px-4 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="text-white" data-animate="animate-fade-in">
-                    <h1 class="text-4xl md:text-5xl font-bold mb-4 font-heading">{{ $product->name }}</h1>
-                    <p class="text-xl text-white/80 mb-8">{{ $product->short_description }}</p>
-
-                    <div class="flex items-baseline mb-8">
-                        <span class="text-5xl font-bold">${{ number_format($product->price, 0) }}</span>
-                        @if($product->price_label)
-                            <span class="text-xl text-white/70 ml-2">{{ $product->price_label }}</span>
-                        @endif
-                    </div>
-
-                    <div class="flex flex-wrap gap-4">
-                        <button onclick="openEnquiryModal()" class="bg-white text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors">
-                            Request Demo
-                        </button>
-                        @if($product->pdf_file)
-                            <a href="{{ asset('storage/' . $product->pdf_file) }}" target="_blank" class="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-primary transition-colors flex items-center">
-                                <i class="fas fa-file-pdf mr-2"></i> Download Brochure
-                            </a>
-                        @endif
-                    </div>
-                </div>
-
-                @if($product->main_image)
-                    <div data-animate="animate-fade-in-up">
-                        <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->name }}" class="rounded-xl shadow-2xl">
-                    </div>
-                @endif
-            </div>
-        </div>
-    </section>
-
-    <!-- Features -->
-    @if($product->features && count($product->features) > 0)
-        <section class="py-20">
-            <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold text-center mb-12 font-heading" data-animate="animate-fade-in">Key Features</h2>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    @foreach($product->features as $feature)
-                        <div class="card-modern p-6" data-animate="animate-fade-in-up">
-                            <div class="w-12 h-12 gradient-primary rounded-lg flex items-center justify-center mb-4">
-                                <i class="fas fa-check-circle text-xl text-white"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 font-heading">{{ $feature['title'] }}</h3>
-                            <p class="text-gray-600">{{ $feature['description'] }}</p>
+    <!-- Professional Product Detail Section -->
+    <section class="bg-gray-50/30 py-16 lg:py-24" id="printable-product">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row gap-16 items-start">
+                
+                <!-- 5. LEFT COLUMN – PRODUCT IMAGE -->
+                <div class="w-full lg:w-5/12 sticky top-32">
+                    <div class="bg-white rounded-[2rem] p-8 shadow-xl shadow-gray-200/50 border border-gray-100 mb-8 overflow-hidden group">
+                        <div class="flex justify-center transition-transform duration-700 group-hover:scale-105">
+                            @if($product->main_image)
+                                <img src="{{ asset('storage/' . $product->main_image) }}" 
+                                     alt="{{ $product->name }}" 
+                                     class="max-w-full h-auto rounded-xl object-contain">
+                            @else
+                                <div class="w-full aspect-square bg-gray-100 flex items-center justify-center rounded-xl">
+                                    <i class="fas fa-image text-4xl text-gray-300"></i>
+                                </div>
+                            @endif
                         </div>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
+                    </div>
 
-    <!-- Video Section -->
-    @if($product->video_url || $product->video_file)
-        <section class="py-20">
-            <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold text-center mb-12 animate-fade-in">Product Video</h2>
-                <div class="max-w-4xl mx-auto animate-fade-in-up">
-                    @if($product->video_url)
-                        @php
-                            $videoId = null;
-                            if (preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/', $product->video_url, $matches)) {
-                                $videoId = $matches[1];
-                            }
-                        @endphp
-                        @if($videoId)
-                            <div class="aspect-video rounded-xl overflow-hidden shadow-lg">
-                                <iframe src="https://www.youtube.com/embed/{{ $videoId }}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
-                            </div>
-                        @else
-                            <div class="aspect-video rounded-xl overflow-hidden shadow-lg">
-                                <iframe src="{{ $product->video_url }}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
-                            </div>
-                        @endif
-                    @elseif($product->video_file)
-                        <div class="aspect-video rounded-xl overflow-hidden shadow-lg bg-black">
-                            <video controls class="w-full h-full">
-                                <source src="{{ asset('storage/' . $product->video_file) }}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
+                    <!-- Short Description (Under Image) -->
+                    @if($product->short_description)
+                        <div class="text-center px-4">
+                            <p class="text-gray-500 text-lg leading-relaxed italic line-clamp-3">
+                                {{ strip_tags($product->short_description) }}
+                            </p>
                         </div>
                     @endif
                 </div>
-            </div>
-        </section>
-    @endif
 
-    <!-- Gallery Section -->
-    @if($product->gallery && count($product->gallery) > 0)
-        <section class="py-20 bg-white">
-            <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold text-center mb-12 animate-fade-in">Gallery</h2>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
-                    @foreach($product->gallery as $image)
-                        <a href="{{ asset('storage/' . $image) }}" target="_blank" class="block aspect-square overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow animate-fade-in-up">
-                            <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover hover:scale-110 transition-transform duration-300">
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
+                <!-- 6. RIGHT COLUMN – PRODUCT CONTENT -->
+                <div class="w-full lg:w-7/12 space-y-12">
+                    
+                    <!-- 6.1 Product Name -->
+                    <div>
+                        <h1 class="text-4xl md:text-6xl font-black text-gray-900 leading-tight uppercase tracking-tight">
+                            {{ $product->name }}
+                        </h1>
+                        <div class="w-24 h-2 bg-emerald-600 mt-4 rounded-full"></div>
+                    </div>
 
-    <!-- Description -->
-    <section class="py-20 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-3xl font-bold mb-8 animate-fade-in">About {{ $product->name }}</h2>
-                <div class="prose prose-lg max-w-none animate-fade-in-up">
-                    {!! $product->description !!}
-                </div>
-            </div>
-        </div>
-    </section>
+                    <!-- 6.2 Full Description -->
+                    <div class="prose prose-xl max-w-none text-gray-600 leading-loose">
+                        <p>{{ strip_tags($product->description) }}</p>
+                    </div>
 
-    <!-- CTA Section -->
-    <section class="py-20 gradient-primary text-white relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10">
-            <div class="absolute top-0 left-1/4 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-        </div>
-        <div class="container mx-auto px-4 text-center relative z-10">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4 font-heading" data-animate="animate-fade-in">Ready to Get Started?</h2>
-            <p class="text-xl text-white/80 mb-8 max-w-2xl mx-auto" data-animate="animate-fade-in">Request a demo or contact our sales team for a personalized consultation.</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center" data-animate="animate-fade-in-up">
-                <button onclick="openEnquiryModal()" class="bg-white text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors">
-                    Request Demo
-                </button>
-                <a href="{{ route('contact') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-primary transition-colors">
-                    Contact Sales
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Enquiry Modal -->
-    <div id="enquiry-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 animate-scale-in">
-            <div class="p-6">
-                <div class="flex justify-between items-start mb-4">
-                    <h3 class="text-xl font-bold">Request Demo: {{ $product->name }}</h3>
-                    <button onclick="closeEnquiryModal()" class="text-gray-400 hover:text-gray-600">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-
-                <form action="{{ route('products.enquiry') }}" method="POST" id="enquiry-form">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Mobile Number *</label>
-                            <input type="tel" name="mobile" required
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                    <!-- 6.3 Highlights Section -->
+                    @if($product->key_benefits)
+                        <div class="space-y-6">
+                            <h3 class="text-2xl font-black text-emerald-800 flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-sm">
+                                    <i class="fas fa-star text-emerald-600"></i>
+                                </span>
+                                Highlights:
+                            </h3>
+                            <div class="text-gray-700 text-lg space-y-3 pl-2">
+                                {!! preg_replace('/<[^>]*>/', "\n", $product->key_benefits) !!}
+                            </div>
                         </div>
+                    @endif
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email (Optional)</label>
-                            <input type="email" name="email"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                    <!-- 6.4 Dosage Section -->
+                    @if($product->dosage)
+                        <div class="bg-emerald-50 rounded-3xl p-8 border border-emerald-100">
+                            <h3 class="text-2xl font-black text-emerald-800 flex items-center gap-3 mb-4">
+                                <i class="fas fa-flask text-emerald-600"></i>
+                                Doses:
+                            </h3>
+                            <div class="text-emerald-900 text-lg font-medium">
+                                {{ strip_tags($product->dosage) }}
+                            </div>
                         </div>
+                    @endif
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Message (Optional)</label>
-                            <textarea name="notes" rows="3"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary"></textarea>
-                        </div>
-
-                        <button type="submit" class="w-full btn-primary py-3 rounded-lg font-semibold">
-                            Submit Request
+                    <!-- 7. ACTION BUTTONS -->
+                    <div class="flex flex-wrap gap-4 pt-8 no-print">
+                        <x-frontend.button href="{{ route('products.index') }}" variant="primary" class="bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl font-bold shadow-lg shadow-emerald-200 transition-all transform hover:-translate-y-1">
+                            View More Products
+                        </x-frontend.button>
+                        
+                        <button onclick="window.print()" class="flex items-center gap-3 bg-white text-gray-700 px-10 py-4 rounded-2xl font-bold border-2 border-emerald-600 hover:bg-emerald-600 hover:text-white transition-all transform hover:-translate-y-1">
+                            <i class="fas fa-print"></i>
+                            Print
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Custom Print CSS -->
+    <style>
+        @media print {
+            header, footer, .no-print { display: none !important; }
+            body { background: white !important; }
+            section { py: 0 !important; }
+            .container { max-width: 100% !important; margin: 0 !important; padding: 2rem !important; }
+            .flex { display: block !important; }
+            .lg\:w-5\/12, .lg\:w-7\/12 { width: 100% !important; margin-bottom: 2rem; position: static !important; }
+            h1 { font-size: 32pt !important; }
+            .bg-emerald-50 { background: transparent !important; color: black !important; padding: 0 !important; border: none !important; }
+            .text-emerald-800 { color: black !important; }
+            .prose { font-size: 12pt !important; }
+        }
+    </style>
 @endsection
 
-@push('scripts')
-<script>
-    function openEnquiryModal() {
-        document.getElementById('enquiry-modal').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
 
-    function closeEnquiryModal() {
-        document.getElementById('enquiry-modal').classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-
-    document.getElementById('enquiry-modal').addEventListener('click', function(e) {
-        if (e.target === this) closeEnquiryModal();
-    });
-</script>
-@endpush

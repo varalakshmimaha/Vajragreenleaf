@@ -35,24 +35,45 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Logo (Dark)</label>
-                    @if(\App\Models\SiteSetting::get('logo'))
-                        <img src="{{ asset('storage/' . \App\Models\SiteSetting::get('logo')) }}" class="h-12 mb-2">
+                    @php $logo = \App\Models\SiteSetting::get('logo'); @endphp
+                    @if($logo)
+                        <div class="mb-2 p-2 border rounded bg-gray-50 inline-block">
+                            @if(file_exists(storage_path('app/public/' . $logo)))
+                                <img src="{{ asset('storage/' . $logo) }}" class="h-12">
+                            @else
+                                <span class="text-xs text-red-500"><i class="fas fa-exclamation-triangle"></i> File missing on disk</span>
+                            @endif
+                        </div>
                     @endif
                     <input type="file" name="logo" class="w-full">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Logo (Light)</label>
-                    @if(\App\Models\SiteSetting::get('logo_light'))
-                        <img src="{{ asset('storage/' . \App\Models\SiteSetting::get('logo_light')) }}" class="h-12 mb-2 bg-gray-800 p-1">
+                    @php $logoLight = \App\Models\SiteSetting::get('logo_light'); @endphp
+                    @if($logoLight)
+                        <div class="mb-2 p-2 border rounded bg-gray-800 inline-block">
+                            @if(file_exists(storage_path('app/public/' . $logoLight)))
+                                <img src="{{ asset('storage/' . $logoLight) }}" class="h-12">
+                            @else
+                                <span class="text-xs text-red-500"><i class="fas fa-exclamation-triangle"></i> File missing on disk</span>
+                            @endif
+                        </div>
                     @endif
                     <input type="file" name="logo_light" class="w-full">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Favicon</label>
-                    @if(\App\Models\SiteSetting::get('favicon'))
-                        <img src="{{ asset('storage/' . \App\Models\SiteSetting::get('favicon')) }}" class="h-8 mb-2">
+                    @php $favicon = \App\Models\SiteSetting::get('favicon'); @endphp
+                    @if($favicon)
+                        <div class="mb-2 p-2 border rounded bg-gray-50 inline-block">
+                            @if(file_exists(storage_path('app/public/' . $favicon)))
+                                <img src="{{ asset('storage/' . $favicon) }}" class="h-8">
+                            @else
+                                <span class="text-xs text-red-500"><i class="fas fa-exclamation-triangle"></i> File missing on disk</span>
+                            @endif
+                        </div>
                     @endif
                     <input type="file" name="favicon" class="w-full">
                 </div>
