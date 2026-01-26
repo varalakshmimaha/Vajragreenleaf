@@ -189,20 +189,20 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-emerald-500">
+                <div class="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
+                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-emerald-500 min-w-[200px] flex-shrink-0">
                         <p class="text-gray-500 text-sm font-semibold mb-1 uppercase tracking-wider">Total Referrals</p>
                         <p class="text-4xl font-black text-gray-900">{{ $stats['total'] }}</p>
                     </div>
-                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 min-w-[200px] flex-shrink-0">
                         <p class="text-gray-500 text-sm font-semibold mb-1 uppercase tracking-wider">Level 1</p>
                         <p class="text-4xl font-black text-gray-900">{{ $stats['level1'] }}</p>
                     </div>
-                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 min-w-[200px] flex-shrink-0">
                         <p class="text-gray-500 text-sm font-semibold mb-1 uppercase tracking-wider">Level 2</p>
                         <p class="text-4xl font-black text-gray-900">{{ $stats['level2'] }}</p>
                     </div>
-                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500">
+                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500 min-w-[200px] flex-shrink-0">
                         <p class="text-gray-500 text-sm font-semibold mb-1 uppercase tracking-wider">Level 3</p>
                         <p class="text-4xl font-black text-gray-900">{{ $stats['level3'] }}</p>
                     </div>
@@ -287,9 +287,9 @@
                             </div>
 
                             <div class="relative">
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                    @foreach($user->referrals()->take(3)->get() as $level1)
-                                        <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all group relative">
+                                <div class="flex gap-6 overflow-x-auto pb-6 scrollbar-hide px-2">
+                                    @foreach($user->referrals()->take(5)->get() as $level1)
+                                        <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all group relative min-w-[280px] flex-shrink-0">
                                             <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest leading-none">Level 1</div>
                                             <div class="flex items-center gap-4 mb-4">
                                                 <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors">

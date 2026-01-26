@@ -22,6 +22,9 @@ class AdminUserController extends Controller
 
     public function index(Request $request)
     {
+        // Increase execution time for large datasets
+        set_time_limit(120);
+        
         $query = User::query();
 
         if ($request->filled('search')) {
@@ -39,8 +42,13 @@ class AdminUserController extends Controller
             $query->where('is_active', $request->status === 'active');
         }
 
-        // eager load sponsor to avoid N+1 and allow showing sponsor details
-        $users = $query->with('sponsor')->orderBy('created_at', 'desc')->paginate(20);
+        // Eager load relationships to avoid N+1 queries
+        // Only select necessary columns for better performance
+        $users = $query
+            ->with(['sponsorByReferralId:id,name,referral_id'])
+            ->select('id', 'name', 'email', 'username', 'referral_id', 'sponsor_id', 'sponsor_referral_id', 'role', 'is_active', 'last_login_at', 'created_at', 'avatar')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
 
         // If AJAX/json requested, return a lightweight JSON payload for polling
         if ($request->query('ajax') || $request->wantsJson()) {
@@ -53,7 +61,7 @@ class AdminUserController extends Controller
                     'referral_id' => $u->referral_id,
                     'sponsor_id' => $u->sponsor_id,
                     'sponsor_referral_id' => $u->sponsor_referral_id,
-                    'sponsor_name' => $u->sponsorByReferralId->name ?? null,
+                    'sponsor_name' => $u->sponsorByReferralId?->name ?? null,
                     'role' => $u->role,
                     'is_active' => (bool) $u->is_active,
                     'last_login_at' => $u->last_login_at ? $u->last_login_at->toDateTimeString() : null,

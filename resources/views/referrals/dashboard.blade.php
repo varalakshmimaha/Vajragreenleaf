@@ -3,234 +3,420 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Referrals - Multilevel Network</title>
+    <title>Referral Network - BlueWitcher</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
-        body { font-family: 'Outfit', sans-serif; }
-        .referral-card {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
-            border-left: 4px solid #10b981;
-        }
-        .level-badge-1 { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .level-badge-2 { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
-        .level-badge-3 { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
-        .tree-line {
+        body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; }
+        
+        /* Tree Visualization - Zoom-Safe Scrollable Container */
+        .tree-viewport {
+            width: 100%;
+            height: 700px;
+            overflow: auto;
             position: relative;
+            background: #f8fafc;
+            border-radius: 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: inset 0 2px 10px 0 rgba(0, 0, 0, 0.02);
         }
-        .tree-line::before {
+        
+        .tree-container {
+            display: inline-block;
+            padding: 60px;
+            min-width: 100%;
+            min-height: 100%;
+        }
+
+        .tree {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: max-content;
+        }
+
+        .tree ul {
+            padding-top: 50px; 
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 0;
+            padding-left: 0;
+            gap: 20px;
+        }
+
+        .tree li {
+            text-align: center;
+            list-style-type: none;
+            position: relative;
+            padding: 50px 15px 0 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Horizontal connection lines */
+        .tree li::before, .tree li::after {
             content: '';
+            position: absolute; 
+            top: 0; 
+            right: 50%;
+            border-top: 2px solid #cbd5e1;
+            width: 50%; 
+            height: 50px;
+            z-index: 1;
+        }
+        .tree li::after {
+            right: auto; 
+            left: 50%;
+            border-left: 2px solid #cbd5e1;
+        }
+
+        /* Remove lines for single children */
+        .tree li:only-child::after, .tree li:only-child::before {
+            display: none;
+        }
+        .tree li:only-child { padding-top: 0; }
+        
+        /* Remove connectors from the edges */
+        .tree li:first-child::before, .tree li:last-child::after {
+            border: 0 none;
+        }
+        .tree li:last-child::before {
+            border-right: 2px solid #cbd5e1;
+            border-radius: 0 12px 0 0;
+        }
+        .tree li:first-child::after {
+            border-radius: 12px 0 0 0;
+        }
+
+        /* Parent vertical downward line */
+        .tree ul::before {
+            content: '';
+            position: absolute; 
+            top: 0; 
+            left: 50%;
+            border-left: 2px solid #cbd5e1;
+            width: 0; 
+            height: 50px;
+            margin-left: -1px;
+            z-index: 1;
+        }
+
+        /* Node Style - Precise Fixed Width for Centering */
+        .node-card {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            display: inline-block;
+            width: 120px; /* Fixed width for consistent centering */
+            box-shadow: 0 5px 15px -3px rgba(37, 99, 235, 0.3);
+            position: relative;
+            z-index: 10;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid #3b82f6;
+        }
+
+        .node-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -5px rgba(37, 99, 235, 0.4);
+            border-color: #60a5fa;
+        }
+
+        .node-card.root {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            border: 2px solid #60a5fa;
+            min-width: 120px;
+            padding: 8px 16px;
+        }
+
+        .node-name {
+            font-weight: 800;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+            letter-spacing: -0.01em;
+        }
+
+        .node-id {
+            font-size: 0.65rem;
+            opacity: 0.9;
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 1px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0px 5px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .level-badge {
             position: absolute;
-            left: -20px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #e5e7eb;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 900;
+            padding: 1px 6px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+            z-index: 20;
+            text-transform: uppercase;
+        }
+
+        .tree li {
+            padding: 50px 8px 0 8px; /* Reduced side padding */
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px;
+            color: #64748b;
+            width: 100%;
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            color: #e2e8f0;
         }
     </style>
 </head>
-<body class="bg-[#f0fdf4] min-h-screen">
-    
-    <div class="container mx-auto px-4 py-8 max-w-7xl">
+<body class="min-h-screen bg-[#f8fafc]">
+    <div class="container mx-auto px-4 py-12 max-w-7xl">
         <!-- Header -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h1 class="text-4xl font-bold text-gray-900 mb-2">My Referral Network</h1>
-                    <p class="text-gray-600">Track and manage your multilevel referral tree</p>
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6 bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+            <div>
+                <h1 class="text-4xl font-black text-slate-900 tracking-tight leading-none">Referral Network</h1>
+                <p class="text-slate-500 mt-3 text-lg font-medium">Visual hierarchical structure of your team</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="bg-blue-50 px-6 py-4 rounded-2xl border border-blue-100">
+                    <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Your Unique ID</p>
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl font-black text-blue-700 font-mono tracking-tighter">{{ $user->referral_id }}</span>
+                        <button onclick="copyReferralId('{{ $user->referral_id }}')" class="p-2 bg-white rounded-lg text-blue-400 shadow-sm hover:text-blue-600 transition-all border border-blue-100">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="text-right">
-                    <div class="bg-gradient-to-r from-emerald-500 to-green-600 text-white px-6 py-3 rounded-xl shadow-lg">
-                        <p class="text-sm opacity-90">Your Referral ID</p>
-                        <p class="text-3xl font-bold">{{ $user->referral_id }}</p>
+                <a href="{{ route('user.dashboard') }}" class="p-4 bg-slate-900 text-white rounded-2xl hover:bg-slate-800 transition-all shadow-xl hover:-translate-y-1">
+                    <i class="fa-solid fa-house"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden group">
+                <div class="absolute -right-4 -bottom-4 text-blue-50/50 group-hover:scale-110 transition-transform duration-500">
+                    <i class="fa-solid fa-users text-8xl"></i>
+                </div>
+                <div class="relative">
+                    <div class="text-slate-400 text-xs font-black uppercase tracking-widest mb-2">Total Network</div>
+                    <div class="text-4xl font-black text-slate-900" id="totalReferrals">-</div>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden group">
+                <div class="absolute -right-4 -bottom-4 text-emerald-50/50 group-hover:scale-110 transition-transform duration-500">
+                    <i class="fa-solid fa-user-check text-8xl"></i>
+                </div>
+                <div class="relative">
+                    <div class="text-slate-400 text-xs font-black uppercase tracking-widest mb-2">Level 1</div>
+                    <div class="text-4xl font-black text-emerald-600" id="level1Count">-</div>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden group">
+                <div class="absolute -right-4 -bottom-4 text-teal-50/50 group-hover:scale-110 transition-transform duration-500">
+                    <i class="fa-solid fa-network-wired text-8xl"></i>
+                </div>
+                <div class="relative">
+                    <div class="text-slate-400 text-xs font-black uppercase tracking-widest mb-2">Level 2</div>
+                    <div class="text-4xl font-black text-teal-600" id="level2Count">-</div>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden group">
+                <div class="absolute -right-4 -bottom-4 text-indigo-50/50 group-hover:scale-110 transition-transform duration-500">
+                    <i class="fa-solid fa-diagram-project text-8xl"></i>
+                </div>
+                <div class="relative">
+                    <div class="text-slate-400 text-xs font-black uppercase tracking-widest mb-2">Level 3+</div>
+                    <div class="text-4xl font-black text-indigo-600" id="level3Count">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tree Visualization Area -->
+        <div class="bg-white rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden relative">
+            <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div class="flex items-center gap-5">
+                    <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-200">
+                        <i class="fa-solid fa-sitemap text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-900 leading-none">Organization Tree</h2>
+                        <p class="text-sm text-slate-500 font-bold mt-2">Scroll horizontally to view the full hierarchy</p>
+                    </div>
+                </div>
+                <button id="refreshBtn" class="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-900 rounded-2xl hover:bg-slate-50 transition-all text-sm font-black shadow-sm">
+                    <i class="fa-solid fa-rotate"></i>
+                    Refresh Tree
+                </button>
+            </div>
+
+            <div class="tree-viewport" id="viewport">
+                <div class="tree-container" id="treeContainer">
+                    <div class="flex flex-col items-center justify-center min-h-[400px]" id="loadingState">
+                        <div class="animate-spin w-12 h-12 border-[5px] border-blue-600 border-t-transparent rounded-full mb-4"></div>
+                        <p class="text-slate-400 font-bold">Connecting your network...</p>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8" id="statsCards">
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-emerald-500">
-                <p class="text-gray-600 text-sm font-medium mb-1">Total Referrals</p>
-                <p class="text-3xl font-bold text-gray-900" id="totalReferrals">-</p>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
-                <p class="text-gray-600 text-sm font-medium mb-1">Level 1</p>
-                <p class="text-3xl font-bold text-gray-900" id="level1Count">-</p>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
-                <p class="text-gray-600 text-sm font-medium mb-1">Level 2</p>
-                <p class="text-3xl font-bold text-gray-900" id="level2Count">-</p>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500">
-                <p class="text-gray-600 text-sm font-medium mb-1">Level 3</p>
-                <p class="text-3xl font-bold text-gray-900" id="level3Count">-</p>
-            </div>
-        </div>
-
-        <!-- Referral Tree -->
-        <div class="bg-white rounded-2xl shadow-lg p-8">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Referral Tree</h2>
-                <div class="flex gap-3">
-                    <button id="refreshBtn" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
-                        🔄 Refresh
-                    </button>
-                    <button id="loadMoreBtn" class="hidden px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors">
-                        Load All Levels
-                    </button>
+    <!-- User Detail Modal -->
+    <div id="userModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md hidden items-center justify-center z-[1000] p-6">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-sm w-full overflow-hidden border border-slate-100">
+            <div class="p-10 text-center">
+                <div id="modalAvatar" class="w-28 h-28 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl mx-auto flex items-center justify-center text-white text-5xl font-black shadow-2xl mb-8 rotate-3">
+                    ?
                 </div>
-            </div>
-            
-            <div id="referralTree" class="space-y-4">
-                <div class="text-center py-12 text-gray-500">
-                    <div class="animate-spin inline-block w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full mb-4"></div>
-                    <p>Loading referral tree...</p>
+                <h3 id="modalName" class="text-2xl font-black text-slate-900 mb-2 leading-tight">Name</h3>
+                <p id="modalId" class="text-slate-400 font-mono font-bold mb-8 bg-slate-50 py-2 px-4 rounded-xl inline-block">ID: 00000</p>
+                
+                <div class="grid grid-cols-1 gap-3 mb-10">
+                    <div class="bg-slate-50 p-5 rounded-2xl text-left border border-slate-100">
+                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Network Hierarchy</div>
+                        <div id="modalLevel" class="text-sm font-black text-blue-600">Level 1 Member</div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Back Button -->
-        <div class="mt-8 text-center">
-            <a href="{{ route('user.dashboard') }}" class="inline-flex items-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
-                ← Back to Dashboard
-            </a>
+                <button onclick="closeModal()" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black hover:bg-slate-800 transition-all shadow-xl hover:-translate-y-1">
+                    Close Details
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        let currentMaxLevel = 3;
-        let hasMoreLevels = false;
+        const viewport = document.getElementById('viewport');
+        const container = document.getElementById('treeContainer');
 
-        // Load stats
         async function loadStats() {
             try {
                 const response = await fetch("{{ route('user.referrals.stats') }}");
                 const data = await response.json();
-                
-                document.getElementById('totalReferrals').textContent = data.totalReferrals;
-                document.getElementById('level1Count').textContent = data.level1;
-                document.getElementById('level2Count').textContent = data.level2;
-                document.getElementById('level3Count').textContent = data.level3;
-            } catch (error) {
-                console.error('Error loading stats:', error);
+                document.getElementById('totalReferrals').innerText = data.totalReferrals;
+                document.getElementById('level1Count').innerText = data.level1;
+                document.getElementById('level2Count').innerText = data.level2;
+                document.getElementById('level3Count').innerText = data.level3;
+            } catch (err) { console.error(err); }
+        }
+
+        async function loadReferralTree() {
+            try {
+                const response = await fetch("{{ route('user.referrals.tree') }}?maxLevel=5");
+                const data = await response.json();
+                renderTree(data);
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div class="empty-state">Error loading network data</div>';
             }
         }
 
-        // Load referral tree
-        async function loadReferralTree(maxLevel = 3) {
-            try {
-                const response = await fetch(`{{ route('user.referrals.tree') }}?maxLevel=${maxLevel}`);
-                const data = await response.json();
-                
-                hasMoreLevels = data.hasMore;
-                currentMaxLevel = maxLevel;
-                
-                const treeDiv = document.getElementById('referralTree');
-                const loadMoreBtn = document.getElementById('loadMoreBtn');
-                
-                if (data.referrals.length === 0) {
-                    treeDiv.innerHTML = `
-                        <div class="text-center py-12">
-                            <div class="text-6xl mb-4">👥</div>
-                            <p class="text-xl font-semibold text-gray-900 mb-2">No Referrals Yet</p>
-                            <p class="text-gray-600 mb-6">Share your referral ID <strong>${data.referralID}</strong> to start building your network</p>
-                            <button onclick="copyReferralId('${data.referralID}')" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors">
-                                📋 Copy Referral ID
-                            </button>
-                        </div>
-                    `;
-                    loadMoreBtn.classList.add('hidden');
-                } else {
-                    treeDiv.innerHTML = renderReferralTree(data.referrals);
-                    loadMoreBtn.classList.toggle('hidden', !hasMoreLevels);
-                }
-            } catch (error) {
-                console.error('Error loading referral tree:', error);
-                document.getElementById('referralTree').innerHTML = `
-                    <div class="text-center py-12 text-red-600">
-                        <p class="text-xl">Error loading referral tree</p>
-                        <p class="text-sm mt-2">${error.message}</p>
+        function renderTree(data) {
+            if (!data.referrals || data.referrals.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-face-grin-stars text-blue-100"></i>
+                        <h3 class="text-3xl font-black text-slate-800 mb-3">Time to Build!</h3>
+                        <p class="text-slate-500 mb-8 font-medium max-w-sm text-center">Your network is ready to grow. Share ID <span class="text-blue-600 font-bold">${data.referralID}</span> and watch your team expand.</p>
+                        <button onclick="copyReferralId('${data.referralID}')" class="px-10 py-4 bg-blue-600 text-white rounded-2xl font-black hover:bg-blue-700 transition-all shadow-xl shadow-blue-100 active:scale-95">
+                            Copy ID & Share Link
+                        </button>
                     </div>
                 `;
+                return;
             }
+
+            let treeHtml = `
+                <div class="tree">
+                    <div class="node-card root" onclick="showUserModal({name: '${data.name}', referralID: '${data.referralID}', level: 0})">
+                        <div class="node-name">${data.name}</div>
+                        <div class="node-id">${data.referralID}</div>
+                        <span class="level-badge">Top</span>
+                    </div>
+                    ${renderLevel(data.referrals)}
+                </div>
+            `;
+            container.innerHTML = treeHtml;
         }
 
-        // Render referral tree HTML
-        function renderReferralTree(referrals, level = 1) {
-            if (!referrals || referrals.length === 0) return '';
+        function renderLevel(members) {
+            if (!members || members.length === 0) return '';
             
-            const levelColors = {
-                1: 'border-emerald-500 bg-emerald-50',
-                2: 'border-blue-500 bg-blue-50',
-                3: 'border-purple-500 bg-purple-50'
-            };
-            
-            const levelBadges = {
-                1: 'level-badge-1',
-                2: 'level-badge-2',
-                3: 'level-badge-3'
-            };
-            
-            let html = '';
-            referrals.forEach((referral, index) => {
-                const borderColor = levelColors[level] || 'border-gray-500 bg-gray-50';
-                const badgeClass = levelBadges[level] || 'bg-gray-500';
-                const indent = (level - 1) * 40;
-                
+            let html = '<ul>';
+            members.forEach(member => {
                 html += `
-                    <div class="relative" style="margin-left: ${indent}px;">
-                        <div class="referral-card rounded-lg p-4 border-l-4 ${borderColor} hover:shadow-md transition-shadow">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-4">
-                                    <div class="h-12 w-12 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-lg">
-                                        ${referral.name.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div>
-                                        <h3 class="font-semibold text-gray-900">${referral.name}</h3>
-                                        <p class="text-sm text-gray-600">ID: <span class="font-mono font-bold">${referral.referralID}</span></p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <span class="${badgeClass} text-white px-3 py-1 rounded-full text-xs font-bold">
-                                        Level ${level}
-                                    </span>
-                                    ${referral.children && referral.children.length > 0 ? `
-                                        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">
-                                            ${referral.children.length} referral${referral.children.length > 1 ? 's' : ''}
-                                        </span>
-                                    ` : ''}
-                                </div>
-                            </div>
+                    <li>
+                        <div class="node-card" onclick="event.stopPropagation(); showUserModal({name: '${member.name}', referralID: '${member.referralID}', level: ${member.level}})">
+                            <div class="node-name">${member.name}</div>
+                            <div class="node-id">${member.referralID}</div>
+                            <span class="level-badge">L${member.level}</span>
                         </div>
-                        ${referral.children && referral.children.length > 0 ? renderReferralTree(referral.children, level + 1) : ''}
-                    </div>
+                        ${renderLevel(member.children)}
+                    </li>
                 `;
             });
-            
+            html += '</ul>';
             return html;
         }
 
-        // Copy referral ID
+        function showUserModal(user) {
+            document.getElementById('modalName').innerText = user.name;
+            document.getElementById('modalId').innerText = 'ID: ' + user.referralID;
+            document.getElementById('modalLevel').innerText = user.level === 0 ? 'Network Head' : 'Level ' + user.level + ' Member';
+            document.getElementById('modalAvatar').innerText = user.name.charAt(0);
+            document.getElementById('userModal').classList.remove('hidden');
+            document.getElementById('userModal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('userModal').classList.add('hidden');
+            document.getElementById('userModal').classList.remove('flex');
+        }
+
         function copyReferralId(id) {
             navigator.clipboard.writeText(id).then(() => {
-                alert('Referral ID copied to clipboard!');
+                const btn = event.currentTarget;
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                setTimeout(() => btn.innerHTML = original, 2000);
             });
         }
 
-        // Event listeners
-        document.getElementById('refreshBtn').addEventListener('click', () => {
-            loadReferralTree(currentMaxLevel);
+        document.getElementById('refreshBtn').onclick = () => {
             loadStats();
-        });
+            loadReferralTree();
+        };
 
-        document.getElementById('loadMoreBtn').addEventListener('click', () => {
-            loadReferralTree(null); // Load all levels
+        // Initial Load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+            loadReferralTree();
         });
-
-        // Initial load
-        loadStats();
-        loadReferralTree();
     </script>
 </body>
 </html>

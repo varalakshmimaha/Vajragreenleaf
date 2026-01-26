@@ -270,6 +270,38 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 
     Route::resource('permissions', PermissionController::class);
     Route::get('/permissions-seed', [PermissionController::class, 'seedDefaults'])->name('permissions.seed');
+
+    // Reports & References Module
+    Route::prefix('reports')->name('reports.')->group(function () {
+        // Reports Dashboard
+        Route::get('/', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('index');
+        
+        // Reference Summary Report
+        Route::get('/summary', [\App\Http\Controllers\Admin\ReportController::class, 'summary'])->name('summary');
+        Route::get('/summary/export', [\App\Http\Controllers\Admin\ReportController::class, 'exportSummary'])->name('summary.export');
+        
+        // Level-Wise Reference Report
+        Route::get('/level-wise', [\App\Http\Controllers\Admin\ReportController::class, 'levelWise'])->name('level-wise');
+        Route::get('/level-wise/export', [\App\Http\Controllers\Admin\ReportController::class, 'exportLevelWise'])->name('level-wise.export');
+        
+        // User-Wise Referral Report
+        Route::get('/user-wise', [\App\Http\Controllers\Admin\ReportController::class, 'userWise'])->name('user-wise');
+        Route::get('/user-wise/export', [\App\Http\Controllers\Admin\ReportController::class, 'exportUserWise'])->name('user-wise.export');
+        
+        // Reference → Sub-Reference Drill-Down
+        Route::get('/drill-down', [\App\Http\Controllers\Admin\ReportController::class, 'drillDown'])->name('drill-down');
+        Route::get('/drill-down/{userId}', [\App\Http\Controllers\Admin\ReportController::class, 'drillDown'])->name('drill-down.user');
+        
+        // Dynamic Growth Report
+        Route::get('/growth', [\App\Http\Controllers\Admin\ReportController::class, 'growth'])->name('growth');
+        
+        // Zero / Inactive Reference Report
+        Route::get('/inactive', [\App\Http\Controllers\Admin\ReportController::class, 'inactive'])->name('inactive');
+        Route::get('/inactive/export', [\App\Http\Controllers\Admin\ReportController::class, 'exportInactive'])->name('inactive.export');
+        
+        // Cache Management
+        Route::post('/clear-cache', [\App\Http\Controllers\Admin\ReportController::class, 'clearCache'])->name('clear-cache');
+    });
 });
 
 // Frontend Auth / Registration
