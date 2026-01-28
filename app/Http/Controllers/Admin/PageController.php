@@ -36,7 +36,7 @@ class PageController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:255',
-            'og_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'og_image' => 'nullable|image|max:20480',
             'is_active' => 'boolean',
             'is_homepage' => 'boolean',
         ]);
@@ -85,7 +85,7 @@ class PageController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:255',
-            'og_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'og_image' => 'nullable|image|max:20480',
             'is_active' => 'boolean',
             'is_homepage' => 'boolean',
         ]);
@@ -136,12 +136,47 @@ class PageController extends Controller
     {
         $data = $request->validate([
             'settings' => 'nullable|array',
+            'settings.image' => 'nullable|image|max:20480',
             'order' => 'nullable|integer',
         ]);
 
         if ($request->has('order')) {
             $data['order'] = $request->order;
         }
+
+        // Handle image upload for about section
+        $settings = $request->input('settings', []);
+        if ($request->hasFile('settings.image')) {
+            // Delete old image if exists
+            $oldImage = $section->settings['image'] ?? null;
+            if ($oldImage) {
+                $this->fileUploadService->delete($oldImage);
+            }
+            $settings['image'] = $this->fileUploadService->upload($request->file('settings.image'), 'sections/about');
+        } elseif (isset($section->settings['image']) && !$request->has('settings.remove_image')) {
+            // Keep existing image if not uploading new one and not removing
+            $settings['image'] = $section->settings['image'];
+        }
+
+        // Handle remove image checkbox
+        if ($request->has('settings.remove_image') && $request->input('settings.remove_image')) {
+            $oldImage = $section->settings['image'] ?? null;
+            if ($oldImage) {
+                $this->fileUploadService->delete($oldImage);
+            }
+            unset($settings['image']);
+        }
+
+        // Handle show_button checkbox (unchecked = not sent)
+        $settings['show_button'] = $request->has('settings.show_button') ? true : false;
+
+        // Handle features (convert comma-separated string to array)
+        if (isset($settings['features']) && is_string($settings['features'])) {
+            $features = array_map('trim', explode(',', $settings['features']));
+            $settings['features'] = array_filter($features); // Remove empty values
+        }
+
+        $data['settings'] = $settings;
 
         $section->update($data);
 

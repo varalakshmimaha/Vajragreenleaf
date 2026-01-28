@@ -86,7 +86,7 @@
 
                                 <!-- Section Settings (Hidden by default) -->
                                 <div id="section-settings-{{ $section->id }}" class="hidden mt-4 pt-4 border-t border-gray-200">
-                                    <form action="{{ route('admin.pages.sections.update', [$page, $section]) }}" method="POST">
+                                    <form action="{{ route('admin.pages.sections.update', [$page, $section]) }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
 
@@ -125,6 +125,55 @@
                                                 <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
                                                 <textarea name="settings[content]" rows="4"
                                                     class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">{{ $section->settings['content'] ?? '' }}</textarea>
+                                            </div>
+
+                                            <!-- Image Upload -->
+                                            <div class="mb-4">
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                                                @if(!empty($section->settings['image']))
+                                                    <div class="mb-2">
+                                                        <img src="{{ asset('storage/' . $section->settings['image']) }}" alt="About Image" class="w-32 h-32 object-cover rounded-lg">
+                                                        <label class="flex items-center mt-2">
+                                                            <input type="checkbox" name="settings[remove_image]" value="1" class="rounded border-gray-300 text-red-600">
+                                                            <span class="ml-2 text-sm text-red-600">Remove image</span>
+                                                        </label>
+                                                    </div>
+                                                @endif
+                                                <input type="file" name="settings[image]" accept="image/*"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                                <p class="text-xs text-gray-500 mt-1">Max file size: 20MB</p>
+                                            </div>
+
+                                            <!-- Features (comma separated) -->
+                                            <div class="mb-4">
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Features (comma separated)</label>
+                                                <input type="text" name="settings[features]" value="{{ is_array($section->settings['features'] ?? null) ? implode(', ', $section->settings['features']) : ($section->settings['features'] ?? '') }}"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Feature 1, Feature 2, Feature 3">
+                                                <p class="text-xs text-gray-500 mt-1">Enter features separated by commas</p>
+                                            </div>
+
+                                            <!-- Button Settings -->
+                                            <div class="mb-4 p-4 bg-gray-100 rounded-lg">
+                                                <h4 class="text-sm font-semibold text-gray-700 mb-3">Button Settings</h4>
+                                                <div class="mb-3">
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" name="settings[show_button]" value="1" {{ ($section->settings['show_button'] ?? true) ? 'checked' : '' }}
+                                                            class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm text-gray-700">Show Button</span>
+                                                    </label>
+                                                </div>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">Button Text</label>
+                                                        <input type="text" name="settings[button_text]" value="{{ $section->settings['button_text'] ?? 'Learn More About Us' }}"
+                                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">Button URL</label>
+                                                        <input type="text" name="settings[button_url]" value="{{ $section->settings['button_url'] ?? '' }}"
+                                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="/about-us">
+                                                    </div>
+                                                </div>
                                             </div>
                                         @endif
 

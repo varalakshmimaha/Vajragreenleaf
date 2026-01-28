@@ -35,7 +35,7 @@ class BankerController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'logo' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'logo' => 'required|image|max:20480',
             'description' => 'nullable|string|max:500',
             'website_url' => 'nullable|url|max:255',
             'order' => 'nullable|integer',
@@ -66,7 +66,7 @@ class BankerController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'logo' => 'nullable|image|max:20480',
             'description' => 'nullable|string|max:500',
             'website_url' => 'nullable|url|max:255',
             'order' => 'nullable|integer',

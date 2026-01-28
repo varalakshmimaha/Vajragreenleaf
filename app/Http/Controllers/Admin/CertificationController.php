@@ -75,7 +75,7 @@ class CertificationController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'issuing_authority' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,pdf|max:2048',
+            'image' => 'nullable|image|max:20480',
             'description' => 'nullable|string',
             'certificate_number' => 'nullable|string|max:255',
             'issue_date' => 'nullable|date',
@@ -109,7 +109,7 @@ class CertificationController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'issuing_authority' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,pdf|max:2048',
+            'image' => 'nullable|image|max:20480',
             'description' => 'nullable|string',
             'certificate_number' => 'nullable|string|max:255',
             'issue_date' => 'nullable|date',

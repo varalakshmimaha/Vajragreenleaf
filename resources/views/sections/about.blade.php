@@ -4,6 +4,9 @@
     $content = $data['content'] ?? '';
     $image = $data['image'] ?? null;
     $features = $data['features'] ?? [];
+    $showButton = $data['show_button'] ?? true;
+    $buttonText = $data['button_text'] ?? 'Learn More About Us';
+    $buttonUrl = $data['button_url'] ?? route('page.show', 'about-us');
 @endphp
 
 <section class="py-20 bg-white">
@@ -48,12 +51,14 @@
                     </div>
                 @endif
 
-                <a href="{{ route('page.show', 'about-us') }}" class="inline-flex items-center gradient-primary text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300">
-                    Learn More About Us
+@if($showButton)
+                <a href="{{ $buttonUrl }}" class="inline-flex items-center gradient-primary text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300">
+                    {{ $buttonText }}
                     <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                     </svg>
                 </a>
+                @endif
             </div>
         </div>
     </div>

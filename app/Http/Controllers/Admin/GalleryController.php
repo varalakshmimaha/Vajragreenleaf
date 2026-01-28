@@ -36,7 +36,7 @@ class GalleryController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image' => 'required|image|max:20480',
             'category_id' => 'nullable|exists:gallery_categories,id',
             'tags' => 'nullable|string',
             'order' => 'nullable|integer|min:0',
@@ -74,7 +74,7 @@ class GalleryController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image' => 'nullable|image|max:20480',
             'category_id' => 'nullable|exists:gallery_categories,id',
             'tags' => 'nullable|string',
             'order' => 'nullable|integer|min:0',

@@ -26,9 +26,9 @@ class SettingsController extends Controller
         $data = $request->validate([
             'site_title' => 'nullable|string|max:255',
             'site_tagline' => 'nullable|string|max:255',
-            'logo' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
-            'logo_light' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
-            'favicon' => 'nullable|image|mimes:png,ico|max:1024',
+            'logo' => 'nullable|image|max:20480',
+            'logo_light' => 'nullable|image|max:20480',
+            'favicon' => 'nullable|image|max:20480',
             'footer_text' => 'nullable|string',
         ]);
 
@@ -62,7 +62,7 @@ class SettingsController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:500',
-            'og_image' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'og_image' => 'nullable|image|max:20480',
             'google_analytics' => 'nullable|string',
             'google_tag_manager' => 'nullable|string',
             'robots' => 'nullable|string',
