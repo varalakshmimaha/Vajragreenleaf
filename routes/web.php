@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\CustomerController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\FrontendAuthController;
@@ -258,7 +259,16 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/page-sections/{pageSection}', [SectionController::class, 'getPageSection'])->name('page-sections.show');
     Route::put('/page-sections/{pageSection}', [SectionController::class, 'updatePageSection'])->name('page-sections.update');
 
-    // Users, Roles & Permissions Management
+    // Customers (Website Users)
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+    Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('customers.show');
+    Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
+    Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+    Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+    Route::post('/customers/{customer}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggle-status');
+    Route::get('/customers/{customer}/referral-tree', [CustomerController::class, 'getReferralTree'])->name('customers.referral-tree');
+
+    // Users (Admin Users), Roles & Permissions Management
     Route::resource('users', AdminUserController::class);
     Route::post('/users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('users.toggle-status');
     Route::get('/users/{user}/referral-tree', [AdminUserController::class, 'getReferralTree'])->name('users.referral-tree');

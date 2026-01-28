@@ -5,11 +5,11 @@
 @section('content')
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Users</h1>
-            <p class="text-gray-600">Manage admin users and their access</p>
+            <h1 class="text-3xl font-bold text-gray-900">Admin Users</h1>
+            <p class="text-gray-600">Manage administrator accounts and their access</p>
         </div>
         <a href="{{ route('admin.users.create') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center">
-            <i class="fas fa-plus mr-2"></i> Add User
+            <i class="fas fa-plus mr-2"></i> Add Admin User
         </a>
     </div>
 
@@ -54,8 +54,7 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">User</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Referral ID</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Sponsor</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Role</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Registered</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Status</th>
                     <th class="px-6 py-4 text-right text-sm font-semibold text-gray-900">Actions</th>
@@ -75,28 +74,16 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            @if($user->referral_id)
-                                <span class="inline-flex items-center px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg font-mono font-bold text-sm">
-                                    <i class="fas fa-hashtag mr-1 text-xs"></i>
-                                    {{ $user->referral_id }}
+                            @if($user->roles->count() > 0)
+                                @foreach($user->roles as $role)
+                                    <span class="inline-flex items-center px-3 py-1 {{ $role->is_super_admin ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700' }} rounded-full text-xs font-bold">
+                                        {{ $role->name }}
+                                    </span>
+                                @endforeach
+                            @else
+                                <span class="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-bold capitalize">
+                                    {{ $user->role ?? 'Admin' }}
                                 </span>
-                            @else
-                                <span class="text-gray-400 text-sm">Not assigned</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4">
-                            @if($user->sponsor_referral_id)
-                                @php
-                                    $sponsor = $user->sponsorByReferralId;
-                                @endphp
-                                <div class="text-sm">
-                                    <div class="font-mono font-bold text-purple-700">{{ $user->sponsor_referral_id }}</div>
-                                    @if($sponsor)
-                                        <div class="text-gray-600 text-xs">{{ $sponsor->name }}</div>
-                                    @endif
-                                </div>
-                            @else
-                                <span class="text-gray-400 text-sm">No sponsor</span>
                             @endif
                         </td>
                         <td class="px-6 py-4">
@@ -137,9 +124,9 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
                             <i class="fas fa-users text-4xl mb-4"></i>
-                            <p>No users found.</p>
+                            <p>No admin users found.</p>
                         </td>
                     </tr>
                 @endforelse

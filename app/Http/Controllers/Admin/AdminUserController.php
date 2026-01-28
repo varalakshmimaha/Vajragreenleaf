@@ -24,8 +24,15 @@ class AdminUserController extends Controller
     {
         // Increase execution time for large datasets
         set_time_limit(120);
-        
-        $query = User::query();
+
+        // Only show admin users (not regular 'user' role)
+        $query = User::where(function ($q) {
+            $q->where('role', 'admin')
+              ->orWhere('role', 'super-admin')
+              ->orWhereHas('roles', function ($rq) {
+                  $rq->whereIn('slug', ['admin', 'super-admin']);
+              });
+        });
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -45,7 +52,7 @@ class AdminUserController extends Controller
         // Eager load relationships to avoid N+1 queries
         // Only select necessary columns for better performance
         $users = $query
-            ->with(['sponsorByReferralId:id,name,referral_id'])
+            ->with(['sponsorByReferralId:id,name,referral_id', 'roles'])
             ->select('id', 'name', 'email', 'username', 'referral_id', 'sponsor_id', 'sponsor_referral_id', 'role', 'is_active', 'last_login_at', 'created_at', 'avatar')
             ->orderBy('created_at', 'desc')
             ->paginate(20);

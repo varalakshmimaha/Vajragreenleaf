@@ -47,13 +47,7 @@ class FrontendAuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'mobile' => 'required|digits:10|unique:users,mobile',
-            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
-            'address' => 'required|string',
-            'state' => 'required|string',
-            'city' => 'required|string',
-            'pincode' => 'required|digits:6',
-            'terms' => 'accepted',
             'sponsor_id' => 'nullable|string', // Can be username or referral_id
         ]);
         $step2 = microtime(true);
@@ -68,7 +62,7 @@ class FrontendAuthController extends Controller
         // Determine sponsor: can be either username or referral_id
         $sponsorValue = $request->sponsor_id ?? null;
         $sponsorReferralId = null;
-        
+
         if ($sponsorValue) {
             $sponsor = \App\Models\User::where('referral_id', $sponsorValue)
                 ->orWhere('username', $sponsorValue)
@@ -81,13 +75,13 @@ class FrontendAuthController extends Controller
 
         $user = \App\Models\User::create([
             'name' => $request->name,
-            'email' => $request->email,
+            'email' => null, // Email no longer required
             'mobile' => $request->mobile,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
-            'address' => $request->address,
-            'state' => $request->state,
-            'city' => $request->city,
-            'pincode' => $request->pincode,
+            'address' => null,
+            'state' => null,
+            'city' => null,
+            'pincode' => null,
             'username' => $username,
             'referral_id' => $referralId,
             'sponsor_id' => $sponsorValue,
@@ -170,21 +164,12 @@ class FrontendAuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required|string',
+            'mobile' => 'required|digits:10',
             'password' => 'required|string',
         ]);
 
-        $identifier = $request->username;
-        $loginField = 'username'; // Default to Sponsor ID
-
-        if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-            $loginField = 'email';
-        } elseif (is_numeric($identifier) && strlen($identifier) === 10) {
-            $loginField = 'mobile';
-        }
-        
         $credentials = [
-            $loginField => $identifier,
+            'mobile' => $request->mobile,
             'password' => $request->password,
             'is_active' => true
         ];
@@ -195,8 +180,8 @@ class FrontendAuthController extends Controller
         }
 
         return back()->withErrors([
-            'username' => 'Invalid credentials or inactive account.',
-        ])->onlyInput('username');
+            'mobile' => 'Invalid mobile number or password, or account is inactive.',
+        ])->onlyInput('mobile');
     }
     
     public function showForgot()
