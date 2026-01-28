@@ -64,8 +64,8 @@ class PageBuilderService
     public function getSectionData(PageSection $section): array
     {
         $type = $section->sectionType->slug ?? '';
-        $content = $section->content ?? [];
-        $settings = $section->settings ?? [];
+        $content = is_array($section->content) ? $section->content : [];
+        $settings = is_array($section->settings) ? $section->settings : [];
 
         // Merge content and settings (settings takes priority)
         $data = array_merge($content, $settings);
