@@ -2,6 +2,7 @@
     $title = $data['title'] ?? 'About Our Company';
     $subtitle = $data['subtitle'] ?? '';
     $content = $data['content'] ?? '';
+    $description = $data['description'] ?? '';
     $image = $data['image'] ?? null;
     $features = $data['features'] ?? [];
     $showButton = $data['show_button'] ?? true;
@@ -31,9 +32,13 @@
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{{ $title }}</h2>
 
                 @if($content)
-                    <div class="prose prose-lg text-gray-600 mb-8">
+                    <div class="prose prose-lg text-gray-600 mb-6">
                         {!! $content !!}
                     </div>
+                @endif
+
+                @if($description)
+                    <p class="text-gray-500 mb-8">{{ $description }}</p>
                 @endif
 
                 @if(count($features) > 0)
