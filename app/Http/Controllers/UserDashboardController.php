@@ -37,25 +37,15 @@ class UserDashboardController extends Controller
     public function updateProfile(Request $request)
     {
         $user = auth()->user();
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
             'mobile' => 'required|digits:10|unique:users,mobile,' . $user->id,
-            'city' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'pincode' => 'nullable|string|max:10',
-            'address' => 'nullable|string',
         ]);
 
         $user->update([
             'name' => $request->name,
-            'email' => $request->email,
             'mobile' => $request->mobile,
-            'city' => $request->city,
-            'state' => $request->state,
-            'pincode' => $request->pincode,
-            'address' => $request->address,
         ]);
 
         return back()->with('success', 'Profile updated successfully.');

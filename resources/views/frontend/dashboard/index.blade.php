@@ -1,110 +1,88 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Dashboard - Referral Program</title>
-    @php
-        try {
-            $viteAssets = vite(['resources/css/app.css', 'resources/js/app.js'])->toHtml();
-        } catch (\Throwable $e) {
-            $viteAssets = null;
-        }
-    @endphp
+@extends('layouts.frontend')
 
-    @if($viteAssets)
-        {!! $viteAssets !!}
-    @else
-        <script src="https://cdn.tailwindcss.com"></script>
-    @endif
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: 'Inter', sans-serif; background: #f9fafb; }
-        
-        .tab-btn.active {
-            color: #10b981;
-            border-bottom-color: #10b981;
-        }
-        
-        .tab-pane {
-            display: none;
-        }
-        
-        .tab-pane.active {
-            display: block;
-        }
+@section('title', 'My Dashboard - Referral Program')
 
-        .form-group label {
-            display: block;
-            font-size: 0.875rem;
-            font-medium;
-            color: #374151;
-            margin-bottom: 0.5rem;
-        }
+@push('styles')
+<style>
+    .tab-btn.active {
+        color: #10b981;
+        border-bottom-color: #10b981;
+    }
 
-        .form-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            background-color: #ffffff;
-            font-size: 0.875rem;
-            transition: border-color 0.2s;
-        }
+    .tab-pane {
+        display: none;
+    }
 
-        .form-input:focus {
-            outline: none;
-            border-color: #10b981;
-            ring: 2px solid #10b981;
-        }
+    .tab-pane.active {
+        display: block;
+    }
 
-        .btn-primary {
-            background-color: #10b981;
-            color: #ffffff;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: background-color 0.2s;
-        }
+    .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
 
-        .btn-primary:hover {
-            background-color: #059669;
-        }
+    .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        background-color: #ffffff;
+        font-size: 0.875rem;
+        transition: border-color 0.2s;
+    }
 
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-    </style>
-</head>
-<body class="min-h-screen">
-    <!-- Navigation -->
-    <nav class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <h1 class="text-xl font-bold text-gray-900">User Dashboard</h1>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm text-gray-600 font-medium">Welcome, {{ $user->name }}</span>
-                    <form action="{{ route('logout') }}" method="POST" class="m-0">
-                        @csrf
-                        <button type="submit" class="text-sm text-gray-600 hover:text-red-600 transition-colors flex items-center">
-                            <i class="fas fa-sign-out-alt mr-1"></i>Logout
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </nav>
+    .form-input:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
 
+    .btn-primary {
+        background-color: #10b981;
+        color: #ffffff;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+
+    .btn-primary:hover {
+        background-color: #059669;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
+@endpush
+
+@section('content')
+<div class="bg-gray-50 min-h-screen py-8">
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Welcome Header -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">User Dashboard</h1>
+                <p class="text-gray-600">Welcome, {{ $user->name }}</p>
+            </div>
+            <form action="{{ route('logout') }}" method="POST" class="m-0">
+                @csrf
+                <button type="submit" class="text-sm text-gray-600 hover:text-red-600 transition-colors flex items-center bg-gray-100 px-4 py-2 rounded-lg">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </form>
+        </div>
+
         @if(session('success'))
             <div class="mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded shadow-sm">
                 {{ session('success') }}
@@ -139,7 +117,7 @@
 
         <!-- Tab Content -->
         <div class="tab-content transition-all">
-            
+
             <!-- Tab 1: Profile -->
             <div class="tab-pane active" id="profile">
                 <div class="bg-white rounded-xl shadow-md p-8 border border-gray-100">
@@ -153,28 +131,8 @@
                                 <input type="text" name="name" value="{{ old('name', $user->name) }}" class="form-input" required>
                             </div>
                             <div class="form-group">
-                                <label>Email Address</label>
-                                <input type="email" name="email" value="{{ old('email', $user->email) }}" class="form-input" required>
-                            </div>
-                            <div class="form-group">
                                 <label>Mobile Number</label>
                                 <input type="text" name="mobile" value="{{ old('mobile', $user->mobile) }}" class="form-input" required>
-                            </div>
-                            <div class="form-group">
-                                <label>City</label>
-                                <input type="text" name="city" value="{{ old('city', $user->city) }}" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label>State</label>
-                                <input type="text" name="state" value="{{ old('state', $user->state) }}" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label>Pincode</label>
-                                <input type="text" name="pincode" value="{{ old('pincode', $user->pincode) }}" class="form-input">
-                            </div>
-                            <div class="form-group md:col-span-2">
-                                <label>Address</label>
-                                <textarea name="address" rows="3" class="form-input">{{ old('address', $user->address) }}</textarea>
                             </div>
                         </div>
                         <div class="mt-8 flex justify-end">
@@ -225,7 +183,7 @@
                     <div class="bg-emerald-50 rounded-xl p-6 border border-emerald-100">
                         <label class="block text-sm font-semibold text-emerald-800 mb-2">Your Referral Link</label>
                         <div class="flex flex-col md:flex-row gap-3">
-                            <input type="text" id="referralLinkInput" readonly value="{{ $referralLink }}" 
+                            <input type="text" id="referralLinkInput" readonly value="{{ $referralLink }}"
                                 class="flex-1 bg-white border border-emerald-200 rounded-lg px-4 py-3 text-sm font-mono text-emerald-700 focus:outline-none">
                             <div class="flex gap-2">
                                 <button onclick="copyReferralLink()" class="flex-1 md:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2">
@@ -245,7 +203,7 @@
                 <div class="bg-white rounded-xl shadow-md p-8 border border-gray-100 max-w-2xl mx-auto">
                     <h3 class="text-2xl font-bold text-gray-900 mb-6">Security & Password</h3>
                     <p class="text-gray-600 mb-8">Ensure your account is using a strong, unique password to stay secure.</p>
-                    
+
                     <form action="{{ route('user.password.update') }}" method="POST">
                         @csrf
                         @method('PUT')
@@ -324,7 +282,7 @@
                                         </div>
                                     @endforeach
                                 </div>
-                                
+
                                 @if($stats['level1'] > 3)
                                     <div class="text-center mt-12">
                                         <a href="{{ route('user.referrals.dashboard') }}" class="inline-flex items-center px-8 py-3 bg-gray-100 hover:bg-emerald-500 hover:text-white text-gray-700 rounded-full font-black transition-all shadow-sm">
@@ -350,7 +308,7 @@
                             <div class="ml-4">
                                 <h4 class="text-blue-900 font-bold mb-1">Growth Mechanism</h4>
                                 <p class="text-blue-800 text-sm leading-relaxed">
-                                    Your team's expansion follows a multi-level structure. Direct referrals form your **Level 1**, and as they invite others, your **Level 2** and **Level 3** networks materialize.
+                                    Your team's expansion follows a multi-level structure. Direct referrals form your <strong>Level 1</strong>, and as they invite others, your <strong>Level 2</strong> and <strong>Level 3</strong> networks materialize.
                                 </p>
                             </div>
                         </div>
@@ -360,59 +318,60 @@
 
         </div>
     </div>
+</div>
+@endsection
 
-    <!-- Tab Switching Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const tabs = document.querySelectorAll('.tab-btn');
-            const panes = document.querySelectorAll('.tab-pane');
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const panes = document.querySelectorAll('.tab-pane');
 
-            // Handle browser hash
-            const hash = window.location.hash.substring(1);
-            if (hash) {
-                const targetTab = document.querySelector(`[data-tab="${hash}"]`);
-                if (targetTab) {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    panes.forEach(p => p.classList.remove('active'));
-                    targetTab.classList.add('active');
-                    document.getElementById(hash).classList.add('active');
-                }
+        // Handle browser hash
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+            const targetTab = document.querySelector(`[data-tab="${hash}"]`);
+            if (targetTab) {
+                tabs.forEach(t => t.classList.remove('active'));
+                panes.forEach(p => p.classList.remove('active'));
+                targetTab.classList.add('active');
+                document.getElementById(hash).classList.add('active');
             }
+        }
 
-            tabs.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const tabId = btn.getAttribute('data-tab');
-                    
-                    // Update UI
-                    tabs.forEach(t => t.classList.remove('active'));
-                    panes.forEach(p => p.classList.remove('active'));
-                    
-                    btn.classList.add('active');
-                    document.getElementById(tabId).classList.add('active');
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
 
-                    // Update hash without jump
-                    history.pushState(null, null, `#${tabId}`);
-                });
+                // Update UI
+                tabs.forEach(t => t.classList.remove('active'));
+                panes.forEach(p => p.classList.remove('active'));
+
+                btn.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+
+                // Update hash without jump
+                history.pushState(null, null, `#${tabId}`);
             });
         });
+    });
 
-        function copyReferralLink() {
-            const copyText = document.getElementById("referralLinkInput");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); // For mobile devices
-            
-            navigator.clipboard.writeText(copyText.value).then(() => {
-                alert("Referral link copied to clipboard!");
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
-        }
+    function copyReferralLink() {
+        const copyText = document.getElementById("referralLinkInput");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
 
-        function shareWhatsApp() {
-            const referralLink = document.getElementById("referralLinkInput").value;
-            const text = encodeURIComponent("Join me on this platform! Click here to register: " + referralLink);
-            window.open("https://wa.me/?text=" + text, "_blank");
-        }
-    </script>
-</body>
-</html>
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            alert("Referral link copied to clipboard!");
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
+
+    function shareWhatsApp() {
+        const referralLink = document.getElementById("referralLinkInput").value;
+        const text = encodeURIComponent("Join me on this platform! Click here to register: " + referralLink);
+        window.open("https://wa.me/?text=" + text, "_blank");
+    }
+</script>
+@endpush
