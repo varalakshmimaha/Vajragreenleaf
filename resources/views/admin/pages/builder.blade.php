@@ -120,7 +120,7 @@
                                             </div>
                                         @endif
 
-                                        @if($section->sectionType->slug === 'about')
+                                        @if($section->sectionType && $section->sectionType->slug === 'about')
                                             <!-- Content -->
                                             <div class="mb-4">
                                                 <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
