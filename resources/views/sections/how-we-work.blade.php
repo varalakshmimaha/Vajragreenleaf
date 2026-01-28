@@ -16,9 +16,6 @@
 
         <!-- Steps -->
         <div class="relative">
-            <!-- Connecting Line -->
-            <div class="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 transform -translate-y-1/2"></div>
-
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 @foreach($steps as $index => $step)
                     <div class="relative text-center" data-animate="animate-fade-in-up" data-delay="{{ $index * 150 }}">

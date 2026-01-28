@@ -71,7 +71,7 @@ class PageController extends Controller
 
     public function builder(Page $page)
     {
-        $page->load('sections.sectionType');
+        $page->load('pageSections.sectionType');
         $sectionTypes = SectionType::active()->get();
         return view('admin.pages.builder', compact('page', 'sectionTypes'));
     }

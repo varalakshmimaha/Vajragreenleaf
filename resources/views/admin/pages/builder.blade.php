@@ -34,7 +34,7 @@
                         <form action="{{ route('admin.pages.sections.store', $page) }}" method="POST">
                             @csrf
                             <input type="hidden" name="section_type_id" value="{{ $type->id }}">
-                            <input type="hidden" name="order" value="{{ $page->sections->count() + 1 }}">
+                            <input type="hidden" name="order" value="{{ $page->pageSections->count() + 1 }}">
                             <button type="submit" class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-blue-50 rounded-lg border border-gray-200 hover:border-blue-300 transition">
                                 <i class="{{ $type->icon ?? 'fas fa-puzzle-piece' }} text-blue-600 mr-2"></i>
                                 <span class="text-sm font-medium">{{ $type->name }}</span>
@@ -50,9 +50,9 @@
             <div class="bg-white rounded-xl shadow-sm p-6">
                 <h2 class="text-lg font-semibold mb-4">Page Sections</h2>
 
-                @if($page->sections->count() > 0)
+                @if($page->pageSections->count() > 0)
                     <div class="space-y-4" id="sections-list">
-                        @foreach($page->sections->sortBy('order') as $section)
+                        @foreach($page->pageSections->sortBy('order') as $section)
                             <div class="border border-gray-200 rounded-lg p-4 bg-gray-50" data-section-id="{{ $section->id }}">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center">
@@ -60,7 +60,7 @@
                                             <i class="fas fa-grip-vertical"></i>
                                         </span>
                                         <div>
-                                            <span class="font-medium">{{ $section->sectionType->name }}</span>
+                                            <span class="font-medium">{{ $section->sectionType->name ?? 'Unknown Section' }}</span>
                                             <span class="text-sm text-gray-500 ml-2">(Order: {{ $section->order }})</span>
                                         </div>
                                     </div>
@@ -103,7 +103,7 @@
                                             </div>
                                         </div>
 
-                                        @if(in_array($section->sectionType->slug, ['services', 'portfolio', 'blog', 'team']))
+                                        @if($section->sectionType && in_array($section->sectionType->slug, ['services', 'portfolio', 'blog', 'team']))
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 mb-1">Limit Items</label>
@@ -120,7 +120,7 @@
                                             </div>
                                         @endif
 
-                                        @if($section->sectionType && $section->sectionType->slug === 'about')
+                                        @if($section->sectionType && in_array($section->sectionType->slug, ['about', 'about-us', 'About']))
                                             <!-- Content -->
                                             <div class="mb-4">
                                                 <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
@@ -185,7 +185,7 @@
                                             </div>
                                         @endif
 
-                                        @if($section->sectionType->slug === 'cta')
+                                        @if($section->sectionType && $section->sectionType->slug === 'cta')
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 mb-1">CTA Button Text</label>
