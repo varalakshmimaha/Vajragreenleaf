@@ -40,12 +40,10 @@ class UserDashboardController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'mobile' => 'required|digits:10|unique:users,mobile,' . $user->id,
         ]);
 
         $user->update([
             'name' => $request->name,
-            'mobile' => $request->mobile,
         ]);
 
         return back()->with('success', 'Profile updated successfully.');

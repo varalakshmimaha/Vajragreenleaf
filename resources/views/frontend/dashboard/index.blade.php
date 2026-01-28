@@ -132,7 +132,8 @@
                             </div>
                             <div class="form-group">
                                 <label>Mobile Number</label>
-                                <input type="text" name="mobile" value="{{ old('mobile', $user->mobile) }}" class="form-input" required>
+                                <input type="text" value="{{ $user->mobile }}" class="form-input bg-gray-100 cursor-not-allowed" readonly disabled>
+                                <p class="text-xs text-gray-500 mt-1">Mobile number cannot be changed</p>
                             </div>
                         </div>
                         <div class="mt-8 flex justify-end">

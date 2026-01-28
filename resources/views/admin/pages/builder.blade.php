@@ -121,10 +121,18 @@
                                         @endif
 
                                         @if($section->sectionType->slug === 'about')
+                                            <!-- Content -->
                                             <div class="mb-4">
                                                 <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
                                                 <textarea name="settings[content]" rows="4"
                                                     class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">{{ $section->settings['content'] ?? '' }}</textarea>
+                                            </div>
+
+                                            <!-- Description -->
+                                            <div class="mb-4">
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                                <textarea name="settings[description]" rows="3"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Additional description text...">{{ $section->settings['description'] ?? '' }}</textarea>
                                             </div>
 
                                             <!-- Image Upload -->
@@ -154,12 +162,12 @@
 
                                             <!-- Button Settings -->
                                             <div class="mb-4 p-4 bg-gray-100 rounded-lg">
-                                                <h4 class="text-sm font-semibold text-gray-700 mb-3">Button Settings</h4>
+                                                <h4 class="text-sm font-semibold text-gray-700 mb-3">View More Button Settings</h4>
                                                 <div class="mb-3">
                                                     <label class="flex items-center">
                                                         <input type="checkbox" name="settings[show_button]" value="1" {{ ($section->settings['show_button'] ?? true) ? 'checked' : '' }}
                                                             class="rounded border-gray-300 text-blue-600">
-                                                        <span class="ml-2 text-sm text-gray-700">Show Button</span>
+                                                        <span class="ml-2 text-sm text-gray-700">Show View More Button</span>
                                                     </label>
                                                 </div>
                                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
