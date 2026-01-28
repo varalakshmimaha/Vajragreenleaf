@@ -65,100 +65,104 @@ class PageBuilderService
     {
         $type = $section->sectionType->slug ?? '';
         $content = $section->content ?? [];
+        $settings = $section->settings ?? [];
+
+        // Merge content and settings (settings takes priority)
+        $data = array_merge($content, $settings);
 
         // Merge title from page section if set
         if ($section->title) {
-            $content['title'] = $section->title;
+            $data['title'] = $section->title;
         }
 
         return match ($type) {
-            'banner' => $this->getBannerData($content),
-            'about' => $content,
-            'services' => $this->getServicesData($content),
-            'how-we-work' => $this->getHowWeWorkData($content),
-            'counters' => $this->getCountersData($content),
-            'portfolio' => $this->getPortfolioData($content),
-            'blog' => $this->getBlogData($content),
-            'team' => $this->getTeamData($content),
-            'testimonials' => $this->getTestimonialsData($content),
-            'clients' => $this->getClientsData($content),
+            'banner' => $this->getBannerData($data),
+            'about' => $data,
+            'services' => $this->getServicesData($data),
+            'how-we-work' => $this->getHowWeWorkData($data),
+            'counters' => $this->getCountersData($data),
+            'portfolio' => $this->getPortfolioData($data),
+            'blog' => $this->getBlogData($data),
+            'team' => $this->getTeamData($data),
+            'testimonials' => $this->getTestimonialsData($data),
+            'clients' => $this->getClientsData($data),
             'contact' => $this->getContactData(),
-            'cta' => $content,
-            'custom-html' => $content,
-            default => $content,
+            'cta' => $data,
+            'custom-html' => $data,
+            default => $data,
         };
     }
 
-    protected function getBannerData(array $content): array
+    protected function getBannerData(array $data): array
     {
         $banners = Banner::active()->orderBy('order')->get();
-        return array_merge($content, ['banners' => $banners]);
+        return array_merge($data, ['banners' => $banners]);
     }
 
-    protected function getServicesData(array $content): array
+    protected function getServicesData(array $data): array
     {
-        $limit = $content['limit'] ?? 6;
+        $limit = $data['limit'] ?? 6;
         $services = Service::active()
             ->orderBy('order')
             ->limit($limit)
             ->get();
-        return array_merge($content, ['services' => $services]);
+        return array_merge($data, ['services' => $services]);
     }
 
-    protected function getHowWeWorkData(array $content = []): array
+    protected function getHowWeWorkData(array $data = []): array
     {
         $steps = HowWeWorkStep::active()->orderBy('order')->get();
-        return array_merge($content, ['steps' => $steps]);
+        return array_merge($data, ['steps' => $steps]);
     }
 
-    protected function getCountersData(array $content = []): array
+    protected function getCountersData(array $data = []): array
     {
         $counters = Counter::active()->orderBy('order')->get();
-        return array_merge($content, ['counters' => $counters]);
+        return array_merge($data, ['counters' => $counters]);
     }
 
-    protected function getPortfolioData(array $content): array
+    protected function getPortfolioData(array $data): array
     {
-        $limit = $content['limit'] ?? 6;
+        $limit = $data['limit'] ?? 6;
         $portfolios = Portfolio::active()
             ->with('category')
             ->orderBy('order')
             ->limit($limit)
             ->get();
-        return array_merge($content, ['portfolios' => $portfolios]);
+        return array_merge($data, ['portfolios' => $portfolios]);
     }
 
-    protected function getBlogData(array $content): array
+    protected function getBlogData(array $data): array
     {
-        $limit = $content['limit'] ?? 3;
+        $limit = $data['limit'] ?? 3;
         $blogs = Blog::published()
             ->with(['category', 'author'])
             ->orderBy('published_at', 'desc')
             ->limit($limit)
             ->get();
-        return array_merge($content, ['blogs' => $blogs]);
+        return array_merge($data, ['blogs' => $blogs]);
     }
 
-    protected function getTeamData(array $content): array
+    protected function getTeamData(array $data): array
     {
-        $limit = $content['limit'] ?? 8;
+        $limit = $data['limit'] ?? 8;
         $team = Team::active()
             ->orderBy('order')
             ->limit($limit)
             ->get();
-        return array_merge($content, ['team' => $team]);
+        return array_merge($data, ['team' => $team]);
     }
 
-    protected function getTestimonialsData(array $content = []): array
+    protected function getTestimonialsData(array $data = []): array
     {
         $testimonials = Testimonial::active()->orderBy('order')->get();
-        return array_merge($content, ['testimonials' => $testimonials]);
+        return array_merge($data, ['testimonials' => $testimonials]);
     }
 
-    protected function getClientsData(array $content = []): array
+    protected function getClientsData(array $data = []): array
     {
         $clients = Client::active()->orderBy('order')->get();
-        return array_merge($content, ['clients' => $clients]);
+        return array_merge($data, ['clients' => $clients]);
     }
 
     protected function getContactData(): array

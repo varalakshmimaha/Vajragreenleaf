@@ -5,6 +5,13 @@
     $description = $data['description'] ?? '';
     $image = $data['image'] ?? null;
     $features = $data['features'] ?? [];
+    // Handle features as string (comma-separated) or array
+    if (is_string($features) && !empty($features)) {
+        $features = array_map('trim', explode(',', $features));
+    }
+    if (!is_array($features)) {
+        $features = [];
+    }
     $showButton = $data['show_button'] ?? true;
     $buttonText = $data['button_text'] ?? 'Learn More About Us';
     $buttonUrl = $data['button_url'] ?? route('page.show', 'about-us');
@@ -12,19 +19,19 @@
 
 <section class="py-20 bg-white">
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="grid grid-cols-1 {{ $image ? 'lg:grid-cols-2' : '' }} gap-12 items-center">
             <!-- Image -->
             @if($image)
                 <div class="relative" data-animate="animate-fade-in-left">
                     <div class="relative z-10">
-                        <img src="{{ asset('storage/' . $image) }}" alt="{{ $title }}" class="rounded-2xl shadow-2xl">
+                        <img src="{{ asset('storage/' . $image) }}" alt="{{ $title }}" class="rounded-2xl shadow-2xl w-full">
                     </div>
                     <div class="absolute -bottom-6 -right-6 w-full h-full gradient-primary rounded-2xl opacity-20"></div>
                 </div>
             @endif
 
             <!-- Content -->
-            <div data-animate="animate-fade-in-right">
+            <div data-animate="animate-fade-in-right" class="{{ !$image ? 'max-w-4xl mx-auto text-center' : '' }}">
                 @if($subtitle)
                     <p class="text-primary font-semibold mb-3 uppercase tracking-wide">{{ $subtitle }}</p>
                 @endif
@@ -42,9 +49,9 @@
                 @endif
 
                 @if(count($features) > 0)
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 {{ !$image ? 'max-w-2xl mx-auto' : '' }}">
                         @foreach($features as $feature)
-                            <div class="flex items-center space-x-3">
+                            <div class="flex items-center space-x-3 {{ !$image ? 'justify-center' : '' }}">
                                 <div class="w-6 h-6 rounded-full gradient-primary flex items-center justify-center flex-shrink-0">
                                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -56,7 +63,7 @@
                     </div>
                 @endif
 
-@if($showButton)
+                @if($showButton)
                 <a href="{{ $buttonUrl }}" class="inline-flex items-center gradient-primary text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300">
                     {{ $buttonText }}
                     <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

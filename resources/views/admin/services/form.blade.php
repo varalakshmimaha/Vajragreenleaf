@@ -88,56 +88,6 @@
                     </div>
                 </div>
 
-                @if(isset($service))
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-lg font-semibold">Service Plans</h2>
-                            <button type="button" onclick="addPlan()" class="text-blue-600 hover:text-blue-800 text-sm">
-                                <i class="fas fa-plus mr-1"></i> Add Plan
-                            </button>
-                        </div>
-
-                        <div id="plans-container">
-                            @foreach($service->plans ?? [] as $index => $plan)
-                                <div class="plan-item border border-gray-200 rounded-lg p-4 mb-4">
-                                    <input type="hidden" name="plans[{{ $index }}][id]" value="{{ $plan->id }}">
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Plan Name</label>
-                                            <input type="text" name="plans[{{ $index }}][name]" value="{{ $plan->name }}"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Price</label>
-                                            <input type="number" name="plans[{{ $index }}][price]" value="{{ $plan->price }}" step="0.01"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Price Label</label>
-                                            <input type="text" name="plans[{{ $index }}][price_label]" value="{{ $plan->price_label }}" placeholder="/month"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                        </div>
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Features (one per line)</label>
-                                        <textarea name="plans[{{ $index }}][features_text]" rows="3"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">{{ is_array($plan->features) ? implode("\n", $plan->features) : '' }}</textarea>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <label class="flex items-center">
-                                            <input type="checkbox" name="plans[{{ $index }}][is_popular]" value="1" {{ $plan->is_popular ? 'checked' : '' }}
-                                                class="rounded border-gray-300 text-blue-600">
-                                            <span class="ml-2 text-sm text-gray-700">Popular Plan</span>
-                                        </label>
-                                        <button type="button" onclick="this.closest('.plan-item').remove()" class="text-red-600 hover:text-red-800 text-sm">
-                                            <i class="fas fa-trash mr-1"></i> Remove
-                                        </button>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
             </div>
 
             <!-- Sidebar -->
@@ -187,49 +137,5 @@
     ClassicEditor
         .create(document.querySelector('#description-editor'))
         .catch(error => console.error(error));
-
-    let planIndex = {{ isset($service) ? $service->plans->count() : 0 }};
-
-    function addPlan() {
-        const container = document.getElementById('plans-container');
-        const html = `
-            <div class="plan-item border border-gray-200 rounded-lg p-4 mb-4">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Plan Name</label>
-                        <input type="text" name="plans[${planIndex}][name]"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Price</label>
-                        <input type="number" name="plans[${planIndex}][price]" step="0.01"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Price Label</label>
-                        <input type="text" name="plans[${planIndex}][price_label]" placeholder="/month"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                    </div>
-                </div>
-                <div class="mb-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Features (one per line)</label>
-                    <textarea name="plans[${planIndex}][features_text]" rows="3"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></textarea>
-                </div>
-                <div class="flex items-center justify-between">
-                    <label class="flex items-center">
-                        <input type="checkbox" name="plans[${planIndex}][is_popular]" value="1"
-                            class="rounded border-gray-300 text-blue-600">
-                        <span class="ml-2 text-sm text-gray-700">Popular Plan</span>
-                    </label>
-                    <button type="button" onclick="this.closest('.plan-item').remove()" class="text-red-600 hover:text-red-800 text-sm">
-                        <i class="fas fa-trash mr-1"></i> Remove
-                    </button>
-                </div>
-            </div>
-        `;
-        container.insertAdjacentHTML('beforeend', html);
-        planIndex++;
-    }
 </script>
 @endpush

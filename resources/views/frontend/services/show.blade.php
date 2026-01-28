@@ -61,58 +61,6 @@
         </div>
     </section>
 
-    <!-- Service Plans -->
-    @if($service->activePlans->count() > 0)
-        <section class="py-20 bg-gray-50">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Service Plans</h2>
-                    <div class="w-20 h-1 gradient-primary mx-auto rounded-full"></div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                    @foreach($service->activePlans as $plan)
-                        <div class="bg-white rounded-2xl shadow-lg p-8 {{ $plan->is_popular ? 'ring-2 ring-primary relative' : '' }} hover-lift">
-                            @if($plan->is_popular)
-                                <span class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 gradient-primary text-white px-4 py-1 rounded-full text-sm font-semibold">Popular</span>
-                            @endif
-
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $plan->name }}</h3>
-
-                            <div class="mb-6">
-                                @if($plan->price)
-                                    <span class="text-4xl font-bold text-primary">${{ number_format($plan->price, 0) }}</span>
-                                    @if($plan->price_label)
-                                        <span class="text-gray-500">{{ $plan->price_label }}</span>
-                                    @endif
-                                @else
-                                    <span class="text-2xl font-bold text-primary">Custom Pricing</span>
-                                @endif
-                            </div>
-
-                            @if($plan->features)
-                                <ul class="space-y-3 mb-8">
-                                    @foreach($plan->features as $feature)
-                                        <li class="flex items-center">
-                                            <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                            </svg>
-                                            <span class="text-gray-600">{{ $feature }}</span>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @endif
-
-                            <button onclick="openEnquiryModal({{ $plan->id }})" class="w-full {{ $plan->is_popular ? 'gradient-primary text-white' : 'bg-gray-100 text-gray-900 hover:bg-gray-200' }} py-3 rounded-xl font-semibold transition-all">
-                                {{ $plan->cta_text }}
-                            </button>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
-
     <!-- Related Services -->
     @if($relatedServices->count() > 0)
         <section class="py-20">
@@ -155,7 +103,6 @@
                 <form id="enquiry-form" action="{{ route('services.enquiry') }}" method="POST">
                     @csrf
                     <input type="hidden" name="service_id" value="{{ $service->id }}">
-                    <input type="hidden" name="service_plan_id" id="plan-id" value="">
 
                     <div class="space-y-4">
                         <div>
@@ -183,8 +130,7 @@
     </div>
 
     <script>
-        function openEnquiryModal(planId = null) {
-            document.getElementById('plan-id').value = planId || '';
+        function openEnquiryModal() {
             document.getElementById('enquiry-modal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
