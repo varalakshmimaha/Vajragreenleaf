@@ -312,17 +312,19 @@
 
     <!-- Edit Old Section Modal -->
     <div id="editOldSectionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white rounded-xl max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto">
-            <div class="p-4 border-b flex items-center justify-between">
+        <div class="bg-white rounded-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-4 border-b flex items-center justify-between sticky top-0 bg-white z-10">
                 <h3 class="text-lg font-semibold">Edit Section Settings</h3>
                 <button onclick="closeOldSectionModal()" class="text-gray-500 hover:text-gray-700">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form id="editOldSectionForm" method="POST">
+            <form id="editOldSectionForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
+                <input type="hidden" name="section_type_slug" id="sectionTypeSlug">
                 <div class="p-4 space-y-4">
+                    <!-- Common Fields -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Section Title (optional)</label>
                         <input type="text" name="title" id="oldSectionTitle" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
@@ -331,13 +333,85 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Subtitle (optional)</label>
                         <input type="text" name="subtitle" id="oldSectionSubtitle" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
                     </div>
-                    <div>
+
+                    <!-- Items Limit - for services, portfolio, blog, team -->
+                    <div id="limitField" class="hidden">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Items Limit</label>
                         <input type="number" name="limit" id="oldSectionLimit" class="w-full px-3 py-2 border border-gray-300 rounded-lg" min="1" max="50">
-                        <p class="text-xs text-gray-500 mt-1">Number of items to display (for services, portfolio, blog, etc.)</p>
+                        <p class="text-xs text-gray-500 mt-1">Number of items to display</p>
+                    </div>
+
+                    <!-- About Section Fields -->
+                    <div id="aboutFields" class="hidden space-y-4">
+                        <hr class="my-4">
+                        <h4 class="font-semibold text-gray-800">About Section Content</h4>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                            <textarea name="settings[content]" id="aboutContent" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="Main content text..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                            <textarea name="settings[description]" id="aboutDescription" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="Additional description..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                            <div id="aboutImagePreview" class="mb-2 hidden">
+                                <img id="aboutImagePreviewImg" src="" alt="About Image" class="w-32 h-32 object-cover rounded-lg">
+                                <label class="flex items-center mt-2">
+                                    <input type="checkbox" name="settings[remove_image]" value="1" class="rounded border-gray-300 text-red-600">
+                                    <span class="ml-2 text-sm text-red-600">Remove image</span>
+                                </label>
+                            </div>
+                            <input type="file" name="settings[image]" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Features (comma separated)</label>
+                            <input type="text" name="settings[features]" id="aboutFeatures" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="Feature 1, Feature 2, Feature 3">
+                            <p class="text-xs text-gray-500 mt-1">Enter features separated by commas</p>
+                        </div>
+
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h5 class="text-sm font-semibold text-gray-700 mb-3">View More Button Settings</h5>
+                            <div class="mb-3">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="settings[show_button]" id="aboutShowButton" value="1" class="rounded border-gray-300 text-blue-600">
+                                    <span class="ml-2 text-sm text-gray-700">Show View More Button</span>
+                                </label>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Button Text</label>
+                                    <input type="text" name="settings[button_text]" id="aboutButtonText" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Learn More About Us">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Button URL</label>
+                                    <input type="text" name="settings[button_url]" id="aboutButtonUrl" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="/about-us">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Section Fields -->
+                    <div id="ctaFields" class="hidden space-y-4">
+                        <hr class="my-4">
+                        <h4 class="font-semibold text-gray-800">CTA Button Settings</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">CTA Button Text</label>
+                                <input type="text" name="settings[cta_text]" id="ctaText" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">CTA Button URL</label>
+                                <input type="text" name="settings[cta_url]" id="ctaUrl" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="p-4 border-t flex justify-end gap-3">
+                <div class="p-4 border-t flex justify-end gap-3 sticky bottom-0 bg-white">
                     <button type="button" onclick="closeOldSectionModal()" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
                         Cancel
                     </button>
@@ -483,9 +557,57 @@
         fetch(`/admin/page-sections/${pageSectionId}`)
             .then(response => response.json())
             .then(data => {
+                const slug = data.section_type?.slug || '';
+
+                // Set common fields
                 document.getElementById('oldSectionTitle').value = data.title || '';
-                document.getElementById('oldSectionSubtitle').value = data.content?.subtitle || '';
-                document.getElementById('oldSectionLimit').value = data.content?.limit || 6;
+                document.getElementById('oldSectionSubtitle').value = data.content?.subtitle || data.settings?.subtitle || '';
+                document.getElementById('sectionTypeSlug').value = slug;
+
+                // Hide all conditional fields first
+                document.getElementById('limitField').classList.add('hidden');
+                document.getElementById('aboutFields').classList.add('hidden');
+                document.getElementById('ctaFields').classList.add('hidden');
+
+                // Show/populate fields based on section type
+                if (['services', 'portfolio', 'blog', 'team'].includes(slug)) {
+                    document.getElementById('limitField').classList.remove('hidden');
+                    document.getElementById('oldSectionLimit').value = data.content?.limit || data.settings?.limit || 6;
+                }
+
+                if (slug === 'about') {
+                    document.getElementById('aboutFields').classList.remove('hidden');
+                    document.getElementById('aboutContent').value = data.settings?.content || '';
+                    document.getElementById('aboutDescription').value = data.settings?.description || '';
+
+                    // Handle features - could be array or string
+                    const features = data.settings?.features;
+                    if (Array.isArray(features)) {
+                        document.getElementById('aboutFeatures').value = features.join(', ');
+                    } else {
+                        document.getElementById('aboutFeatures').value = features || '';
+                    }
+
+                    // Button settings
+                    document.getElementById('aboutShowButton').checked = data.settings?.show_button !== false;
+                    document.getElementById('aboutButtonText').value = data.settings?.button_text || 'Learn More About Us';
+                    document.getElementById('aboutButtonUrl').value = data.settings?.button_url || '';
+
+                    // Image preview
+                    if (data.settings?.image) {
+                        document.getElementById('aboutImagePreview').classList.remove('hidden');
+                        document.getElementById('aboutImagePreviewImg').src = '/storage/' + data.settings.image;
+                    } else {
+                        document.getElementById('aboutImagePreview').classList.add('hidden');
+                    }
+                }
+
+                if (slug === 'cta') {
+                    document.getElementById('ctaFields').classList.remove('hidden');
+                    document.getElementById('ctaText').value = data.settings?.cta_text || '';
+                    document.getElementById('ctaUrl').value = data.settings?.cta_url || '';
+                }
+
                 document.getElementById('editOldSectionForm').action = `/admin/page-sections/${pageSectionId}`;
                 document.getElementById('editOldSectionModal').classList.remove('hidden');
             });

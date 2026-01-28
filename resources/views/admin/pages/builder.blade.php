@@ -121,7 +121,7 @@
                                         @endif
 
                                         @if($section->sectionType && in_array($section->sectionType->slug, ['about', 'about-us', 'About']))
-                                            <!-- Content -->
+                                            <!-- About Section Content Management -->
                                             <div class="mb-4">
                                                 <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
                                                 <textarea name="settings[content]" rows="4"

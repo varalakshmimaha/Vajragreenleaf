@@ -282,6 +282,7 @@ class SectionController extends Controller
             'title' => 'nullable|string|max:255',
             'content' => 'nullable|array',
             'settings' => 'nullable|array',
+            'settings.image' => 'nullable|image|max:20480',
         ]);
 
         // Merge content with title and subtitle
@@ -293,10 +294,44 @@ class SectionController extends Controller
             $content['limit'] = (int) $request->input('limit');
         }
 
+        // Handle settings
+        $settings = $request->input('settings', []);
+        $currentSettings = $pageSection->settings ?? [];
+
+        // Handle image upload for about section
+        if ($request->hasFile('settings.image')) {
+            // Delete old image if exists
+            if (!empty($currentSettings['image'])) {
+                $this->fileUpload->delete($currentSettings['image']);
+            }
+            $settings['image'] = $this->fileUpload->upload($request->file('settings.image'), 'sections/about');
+        } elseif (!empty($request->input('settings.remove_image'))) {
+            // Remove image if checkbox is checked
+            if (!empty($currentSettings['image'])) {
+                $this->fileUpload->delete($currentSettings['image']);
+            }
+            $settings['image'] = null;
+        } else {
+            // Keep existing image
+            $settings['image'] = $currentSettings['image'] ?? null;
+        }
+
+        // Handle show_button checkbox (unchecked = not sent)
+        $settings['show_button'] = $request->has('settings.show_button') ? true : false;
+
+        // Handle features (convert comma-separated string to array)
+        if (isset($settings['features']) && is_string($settings['features'])) {
+            $features = array_map('trim', explode(',', $settings['features']));
+            $settings['features'] = array_filter($features);
+        }
+
+        // Merge with existing settings (preserve values not in form)
+        $mergedSettings = array_merge($currentSettings, $settings);
+
         $pageSection->update([
             'title' => $data['title'] ?? $pageSection->title,
             'content' => $content,
-            'settings' => $data['settings'] ?? $pageSection->settings,
+            'settings' => $mergedSettings,
         ]);
 
         return redirect()->back()->with('success', 'Section updated successfully.');
