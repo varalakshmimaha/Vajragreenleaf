@@ -27,8 +27,8 @@
 
     <!-- Google Fonts -->
     @php
-        $headingFont = $activeTheme->heading_font ?? 'Poppins';
-        $bodyFont = $activeTheme->body_font ?? 'Inter';
+        $headingFont = $activeTheme?->heading_font ?? 'Poppins';
+        $bodyFont = $activeTheme?->body_font ?? 'Inter';
         $fontsToLoad = collect([$headingFont, $bodyFont])->unique()->implode('&family=');
     @endphp
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,6 +44,19 @@
     <!-- Theme CSS Variables -->
     @if($activeTheme)
         <style>{!! $activeTheme->getCssVariables() !!}</style>
+    @else
+        <style>
+            :root {
+                --color-primary: #2563eb;
+                --color-secondary: #1e40af;
+                --color-accent: #f59e0b;
+                --color-text: #1f2937;
+                --color-heading: #111827;
+                --color-background: #f9fafb;
+                --font-heading: 'Poppins';
+                --font-body: 'Inter';
+            }
+        </style>
     @endif
 
     <style>

@@ -13,9 +13,14 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Admin User',
             'email' => 'admin@itbusiness.com',
+            'mobile' => '9876543210',
             'password' => Hash::make('password'),
             'role' => 'admin',
             'is_active' => true,
+            'address' => 'Admin Office',
+            'state' => 'State',
+            'city' => 'City',
+            'pincode' => '123456',
         ]);
     }
 }
