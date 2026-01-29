@@ -8,9 +8,9 @@
     <div class="container mx-auto px-4">
         <!-- Section Header -->
         <div class="text-center max-w-3xl mx-auto mb-16" data-animate="animate-fade-in-up">
-            @if($subtitle)
+            <!-- @if($subtitle)
                 <p class="text-primary font-semibold mb-3 uppercase tracking-wide">{{ $subtitle }}</p>
-            @endif
+            @endif -->
             <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{{ $title }}</h2>
             <div class="w-20 h-1 gradient-primary mx-auto rounded-full"></div>
         </div>
