@@ -1,6 +1,6 @@
 @php
     $title = $data['title'] ?? 'Ready to Start Your Project?';
-    $$ubtitle = $data['content']['subtitle'] ?? '';
+    $subtitle = $data['content']['subtitle'] ?? '';
     $description = $data['description'] ?? 'Let\'s work together to bring your ideas to life.';
     $cta_text = $data['cta_text'] ?? 'Get In Touch';
     $cta_url = $data['cta_url'] ?? route('contact');
