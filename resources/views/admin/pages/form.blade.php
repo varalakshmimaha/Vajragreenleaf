@@ -7,7 +7,7 @@
         <h1 class="text-3xl font-bold text-gray-900">{{ isset($page) ? 'Edit Page' : 'Create Page' }}</h1>
     </div>
 
-    <form action="{{ isset($page) ? route('admin.pages.update', $page) : route('admin.pages.store') }}" method="POST">
+    <form action="{{ isset($page) ? route('admin.pages.update', $page) : route('admin.pages.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @if(isset($page))
             @method('PUT')
@@ -41,6 +41,30 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Content (Optional - for simple pages)</label>
                         <textarea name="content" rows="10" id="content-editor"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ old('content', $page->content ?? '') }}</textarea>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h2 class="text-lg font-semibold mb-4">Banner Settings</h2>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Banner Image</label>
+                        @if(isset($page) && $page->banner_image)
+                            <img src="{{ asset('storage/' . $page->banner_image) }}" class="h-24 mb-2 rounded">
+                        @endif
+                        <input type="file" name="banner_image" accept="image/*" class="w-full">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Banner Title</label>
+                        <input type="text" name="banner_title" value="{{ old('banner_title', $page->banner_title ?? '') }}" placeholder="Custom banner title (optional, defaults to page title)"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Banner Subtitle</label>
+                        <input type="text" name="banner_subtitle" value="{{ old('banner_subtitle', $page->banner_subtitle ?? '') }}" placeholder="Custom banner subtitle (optional)"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
 

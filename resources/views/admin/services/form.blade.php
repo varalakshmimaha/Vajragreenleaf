@@ -52,9 +52,9 @@
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm p-6">
-                    <h2 class="text-lg font-semibold mb-4">Images</h2>
+                    <h2 class="text-lg font-semibold mb-4">Banner Settings</h2>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Banner Image</label>
                             @if(isset($service) && $service->banner_image)
@@ -69,6 +69,18 @@
                             @endif
                             <input type="file" name="image" accept="image/*" class="w-full">
                         </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Banner Title</label>
+                        <input type="text" name="banner_title" value="{{ old('banner_title', $service->banner_title ?? '') }}" placeholder="Custom banner title (optional, defaults to service name)"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Banner Subtitle</label>
+                        <input type="text" name="banner_subtitle" value="{{ old('banner_subtitle', $service->banner_subtitle ?? '') }}" placeholder="Custom banner subtitle (optional)"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
 

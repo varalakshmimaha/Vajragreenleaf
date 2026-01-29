@@ -11,6 +11,8 @@ class Service extends Model
         'name',
         'slug',
         'banner_image',
+        'banner_title',
+        'banner_subtitle',
         'icon',
         'image',
         'short_description',

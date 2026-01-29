@@ -32,7 +32,7 @@ class FrontendAuthController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Invalid Referral ID.'], 404);
+        return response()->json(['message' => 'Invalid Sponsor ID.'], 404);
     }
 
     public function showRegister(Request $request)
@@ -53,9 +53,8 @@ class FrontendAuthController extends Controller
         $step2 = microtime(true);
         \Illuminate\Support\Facades\Log::info("Reg: Validation took " . ($step2 - $step1) . "s");
 
-        // Auto-generate 5-digit Referral ID
+        // Auto-generate 5-digit Referral ID (used as Sponsor ID)
         $referralId = $this->generateReferralId();
-        $username = $this->generateSponsorId($request->name); // Keep username for legacy
         $step3 = microtime(true);
         \Illuminate\Support\Facades\Log::info("Reg: ID Gen took " . ($step3 - $step2) . "s");
 
@@ -82,7 +81,6 @@ class FrontendAuthController extends Controller
             'state' => null,
             'city' => null,
             'pincode' => null,
-            'username' => $username,
             'referral_id' => $referralId,
             'sponsor_id' => $sponsorValue,
             'sponsor_referral_id' => $sponsorReferralId,
@@ -105,15 +103,14 @@ class FrontendAuthController extends Controller
         \Illuminate\Support\Facades\Log::info("Reg: Total took " . ($step5 - $step1) . "s");
 
 
-        // Redirect to success page with Sponsor ID in URL
-        $successUrl = route('auth.success');
-        
+        // Redirect to dashboard directly after registration
+        $dashboardUrl = route('dashboard');
+
         return response()->json([
             'success' => true,
-            'redirect_url' => $successUrl,
-            'sponsor_id' => $username,
+            'redirect_url' => $dashboardUrl,
+            'sponsor_id' => $referralId,
             'referral_id' => $referralId,
-            'user_id' => $username,
             'user_name' => $user->name,
             'user' => $user,
         ]);

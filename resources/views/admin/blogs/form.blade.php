@@ -45,13 +45,26 @@
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm p-6">
-                    <h2 class="text-lg font-semibold mb-4">Featured Image</h2>
+                    <h2 class="text-lg font-semibold mb-4">Banner Settings</h2>
 
-                    <div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Featured/Banner Image</label>
                         @if(isset($blog) && $blog->featured_image)
                             <img src="{{ asset('storage/' . $blog->featured_image) }}" class="h-32 mb-2 rounded">
                         @endif
                         <input type="file" name="featured_image" accept="image/*" class="w-full">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Banner Title</label>
+                        <input type="text" name="banner_title" value="{{ old('banner_title', $blog->banner_title ?? '') }}" placeholder="Custom banner title (optional, defaults to blog title)"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Banner Subtitle</label>
+                        <input type="text" name="banner_subtitle" value="{{ old('banner_subtitle', $blog->banner_subtitle ?? '') }}" placeholder="Custom banner subtitle (optional)"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
 

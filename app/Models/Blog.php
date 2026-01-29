@@ -13,6 +13,8 @@ class Blog extends Model
         'title',
         'slug',
         'featured_image',
+        'banner_title',
+        'banner_subtitle',
         'excerpt',
         'content',
         'meta_title',

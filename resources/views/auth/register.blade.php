@@ -62,8 +62,8 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Referral ID <span class="text-gray-500 text-xs">(Optional)</span></label>
-                        <input type="text" name="sponsor_id" class="form-input block w-full shadow-sm sm:text-sm py-3 px-4" placeholder="Enter referral ID if you have one">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Sponsor Id <span class="text-gray-500 text-xs">(Optional)</span></label>
+                        <input type="text" name="sponsor_id" class="form-input block w-full shadow-sm sm:text-sm py-3 px-4" placeholder="Enter sponsor ID if you have one">
                     </div>
 
                     <div>
@@ -137,7 +137,7 @@
             const result = await response.json();
 
             if (response.ok && result.success) {
-                window.location.href = result.redirect_url + "?id=" + result.user_id + "&name=" + encodeURIComponent(result.user_name);
+                window.location.href = result.redirect_url;
             } else {
                 throw new Error(result.message || (result.errors ? Object.values(result.errors).flat().join(', ') : 'Registration failed'));
             }

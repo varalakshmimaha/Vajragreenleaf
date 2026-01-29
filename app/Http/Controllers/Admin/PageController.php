@@ -32,6 +32,10 @@ class PageController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:pages',
+            'content' => 'nullable|string',
+            'banner_image' => 'nullable|image|max:20480',
+            'banner_title' => 'nullable|string|max:255',
+            'banner_subtitle' => 'nullable|string|max:255',
             'layout' => 'in:default,full-width,sidebar',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
@@ -51,6 +55,10 @@ class PageController extends Controller
 
         if ($request->hasFile('og_image')) {
             $data['og_image'] = $this->fileUploadService->upload($request->file('og_image'), 'pages');
+        }
+
+        if ($request->hasFile('banner_image')) {
+            $data['banner_image'] = $this->fileUploadService->upload($request->file('banner_image'), 'pages');
         }
 
         $data['is_active'] = $request->boolean('is_active');
@@ -81,6 +89,10 @@ class PageController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:pages,slug,' . $page->id,
+            'content' => 'nullable|string',
+            'banner_image' => 'nullable|image|max:20480',
+            'banner_title' => 'nullable|string|max:255',
+            'banner_subtitle' => 'nullable|string|max:255',
             'layout' => 'in:default,full-width,sidebar',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
@@ -99,6 +111,11 @@ class PageController extends Controller
             $data['og_image'] = $this->fileUploadService->upload($request->file('og_image'), 'pages');
         }
 
+        if ($request->hasFile('banner_image')) {
+            $this->fileUploadService->delete($page->banner_image);
+            $data['banner_image'] = $this->fileUploadService->upload($request->file('banner_image'), 'pages');
+        }
+
         $data['is_active'] = $request->boolean('is_active');
         $data['is_homepage'] = $request->boolean('is_homepage');
 
@@ -111,6 +128,9 @@ class PageController extends Controller
     {
         if ($page->og_image) {
             $this->fileUploadService->delete($page->og_image);
+        }
+        if ($page->banner_image) {
+            $this->fileUploadService->delete($page->banner_image);
         }
         $page->delete();
         return redirect()->route('admin.pages.index')
