@@ -12,7 +12,7 @@
         <div class="container mx-auto px-4 relative z-10">
             <div class="text-center text-white" data-animate="animate-fade-in">
                 <h1 class="text-4xl md:text-5xl font-bold mb-4 font-heading">Our Blog</h1>
-                <p class="text-xl text-white/80 max-w-2xl mx-auto">Insights, tutorials, and updates from our team of technology experts.</p>
+                <!-- <p class="text-xl text-white/80 max-w-2xl mx-auto">Insights, tutorials, and updates from our team of technology experts.</p> -->
             </div>
         </div>
     </section>
