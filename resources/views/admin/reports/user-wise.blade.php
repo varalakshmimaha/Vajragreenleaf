@@ -24,7 +24,7 @@
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
     <form action="{{ route('admin.reports.user-wise') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Referral ID</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Sponsor Id</label>
             <input type="text" name="referral_id" value="{{ $filters['referral_id'] ?? '' }}" placeholder="Search ID..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
         </div>
         <div>
@@ -66,7 +66,7 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">User</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Referral ID</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Sponsor Id</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Level</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Direct</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Sub-Refs</th>

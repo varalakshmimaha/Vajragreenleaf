@@ -143,16 +143,16 @@
 
                     <div class="space-y-3 text-sm">
                         <div class="flex justify-between">
-                            <span class="text-gray-500">My Sponsor ID:</span>
-                            <span class="text-gray-900 font-medium">{{ $user->username ?? '—' }}</span>
+                            <span class="text-gray-500">My Sponsor Id:</span>
+                            <span class="text-gray-900 font-medium">{{ $user->referral_id ?? '—' }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-gray-500">Sponsor (referred by):</span>
+                            <span class="text-gray-500">Sponsor By:</span>
                             <span class="text-gray-900">
-                                @if($user->sponsor)
-                                    {{ $user->sponsor->username ?? $user->sponsor->name }}
-                                @elseif($user->sponsor_id)
-                                    {{ $user->sponsor_id }}
+                                @if($user->sponsorByReferralId)
+                                    {{ $user->sponsorByReferralId->name }} ({{ $user->sponsor_referral_id }})
+                                @elseif($user->sponsor_referral_id)
+                                    {{ $user->sponsor_referral_id }}
                                 @else
                                     —
                                 @endif

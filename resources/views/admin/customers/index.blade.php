@@ -26,7 +26,7 @@
     <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
         <form action="{{ route('admin.customers.index') }}" method="GET" class="flex flex-wrap gap-4">
             <div class="flex-1 min-w-[200px]">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, mobile, referral ID..."
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, mobile, Sponsor Id..."
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500">
             </div>
             <div class="w-40">
@@ -52,8 +52,8 @@
                 <tr>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Customer</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Mobile</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Referral ID</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Sponsor</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Sponsor Id</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Sponsor By</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Registered</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Status</th>
                     <th class="px-6 py-4 text-right text-sm font-semibold text-gray-900">Actions</th>
@@ -68,7 +68,6 @@
                                      class="w-10 h-10 rounded-full object-cover">
                                 <div>
                                     <div class="font-medium text-gray-900">{{ $customer->name }}</div>
-                                    <div class="text-sm text-gray-500">{{ $customer->username }}</div>
                                 </div>
                             </div>
                         </td>

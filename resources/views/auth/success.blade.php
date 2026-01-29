@@ -127,14 +127,14 @@
                 </p>
             </div>
 
-            <!-- Sponsor ID Display - Premium Design -->
+            <!-- Sponsor Id Display - Premium Design -->
             <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05)); border: 2px solid rgba(16, 185, 129, 0.3); border-radius: 1rem; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 1rem;">
                     <div style="width: 2.5rem; height: 2.5rem; border-radius: 0.75rem; background: linear-gradient(135deg, #34d399, #10b981); display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-id-badge" style="color: white; font-size: 1.125rem;"></i>
                     </div>
                     <span style="font-size: 0.875rem; color: #6ee7b7; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;">
-                        Your Unique Sponsor ID
+                        Your Unique Sponsor Id
                     </span>
                 </div>
                 
@@ -146,7 +146,7 @@
 
                 <button onclick="copySponsorId()" class="copy-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
                     <i class="fas fa-copy"></i>
-                    <span>Copy Sponsor ID</span>
+                    <span>Copy Sponsor Id</span>
                 </button>
             </div>
 
@@ -154,7 +154,7 @@
             <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 0.75rem; padding: 1rem; margin-bottom: 2rem;">
                 <p style="font-size: 0.875rem; color: #fcd34d; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                     <i class="fas fa-exclamation-triangle"></i> 
-                    <span>Save this Sponsor ID - You'll need it for referrals</span>
+                    <span>Save this Sponsor Id - You'll need it for referrals</span>
                 </p>
             </div>
 

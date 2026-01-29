@@ -38,15 +38,11 @@
                 <div class="bg-gray-50 rounded-lg p-4">
                     <div class="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                            <span class="text-gray-500">Referral ID:</span>
+                            <span class="text-gray-500">Sponsor Id:</span>
                             <span class="font-bold text-emerald-600 font-mono ml-2">{{ $customer->referral_id ?? 'N/A' }}</span>
                         </div>
                         <div>
-                            <span class="text-gray-500">Username:</span>
-                            <span class="font-bold text-gray-700 font-mono ml-2">{{ $customer->username ?? 'N/A' }}</span>
-                        </div>
-                        <div>
-                            <span class="text-gray-500">Sponsor ID:</span>
+                            <span class="text-gray-500">Sponsor By:</span>
                             <span class="font-bold text-purple-600 font-mono ml-2">{{ $customer->sponsor_referral_id ?? 'None' }}</span>
                         </div>
                         <div>

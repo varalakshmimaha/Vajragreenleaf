@@ -105,7 +105,7 @@
                 <i class="fas fa-user-circle mr-2"></i>Profile
             </button>
             <button class="tab-btn px-6 py-4 text-sm font-semibold border-b-2 border-transparent hover:text-emerald-600 transition-all flex items-center" data-tab="sponsor">
-                <i class="fas fa-id-card mr-2"></i>Sponsor ID
+                <i class="fas fa-id-card mr-2"></i>Sponsor Id
             </button>
             <button class="tab-btn px-6 py-4 text-sm font-semibold border-b-2 border-transparent hover:text-emerald-600 transition-all flex items-center" data-tab="password">
                 <i class="fas fa-key mr-2"></i>Reset Password
@@ -145,7 +145,7 @@
                 </div>
             </div>
 
-            <!-- Tab 2: Sponsor ID -->
+            <!-- Tab 2: Sponsor Id -->
             <div class="tab-pane" id="sponsor">
                 <div class="bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl shadow-xl p-8 text-white mb-8">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -154,7 +154,7 @@
                             <p class="text-emerald-50">Your unique identity in our network</p>
                         </div>
                         <div class="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/30">
-                            <p class="text-sm opacity-90 mb-1 font-medium">Your Referral / Sponsor ID</p>
+                            <p class="text-sm opacity-90 mb-1 font-medium">Your Sponsor Id</p>
                             <p class="text-4xl font-bold font-mono tracking-wider">{{ $user->referral_id }}</p>
                         </div>
                     </div>
@@ -268,7 +268,7 @@
                                                 </div>
                                                 <div class="overflow-hidden">
                                                     <h5 class="font-bold text-gray-900 truncate">{{ $level1->name }}</h5>
-                                                    <p class="text-xs text-emerald-600 font-semibold">ID: {{ $level1->referral_id }}</p>
+                                                    <p class="text-xs text-emerald-600 font-semibold">Sponsor Id: {{ $level1->referral_id }}</p>
                                                 </div>
                                             </div>
                                             <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-50 text-xs">
@@ -299,7 +299,7 @@
                                 <i class="fas fa-users text-4xl text-gray-300"></i>
                             </div>
                             <h3 class="text-2xl font-bold text-gray-900 mb-2">No Referrals Yet</h3>
-                            <p class="text-gray-500 max-w-sm mx-auto">Start sharing your Referral ID from the "Sponsor ID" tab to build your network.</p>
+                            <p class="text-gray-500 max-w-sm mx-auto">Start sharing your Sponsor Id from the "Sponsor Id" tab to build your network.</p>
                         </div>
                     @endif
 

@@ -50,7 +50,7 @@
                 <div>
                     <label for="sponsor_id" class="block text-sm font-medium leading-6 text-gray-300">Sponsor By <span class="text-gray-500 font-normal">(Optional)</span></label>
                     <div class="mt-2 relative">
-                        <input id="sponsor_id" name="sponsor_id" type="text" class="block w-full rounded-xl border-0 bg-white/5 py-3.5 px-4 text-white shadow-sm ring-1 ring-inset ring-white/10 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-purple-500 sm:text-sm sm:leading-6 transition-all" placeholder="Enter Sponsor ID (Optional)">
+                        <input id="sponsor_id" name="sponsor_id" type="text" class="block w-full rounded-xl border-0 bg-white/5 py-3.5 px-4 text-white shadow-sm ring-1 ring-inset ring-white/10 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-purple-500 sm:text-sm sm:leading-6 transition-all" placeholder="Enter Sponsor Id (Optional)">
                         <div id="loader" class="absolute right-4 top-3.5 hidden">
                             <svg class="animate-spin h-5 w-5 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -159,7 +159,7 @@
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-75');
                 errorMsg.classList.remove('hidden');
-                errorMsg.querySelector('span').textContent = err.message || 'Sponsor ID not found';
+                errorMsg.querySelector('span').textContent = err.message || 'Sponsor Id not found';
                 details.classList.add('hidden');
             }
         });

@@ -29,7 +29,7 @@
     <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
         <form action="{{ route('admin.users.index') }}" method="GET" class="flex flex-wrap gap-4">
             <div class="flex-1 min-w-[200px]">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, email, referral ID..."
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, email, Sponsor Id..."
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
             </div>
             <div class="w-40">
@@ -181,8 +181,8 @@ function viewSponsorInfo(userId, sponsorId) {
             json.data.forEach(u => {
                 const el = document.getElementById('sponsor-' + u.id);
                 if (!el) return;
-                // Decide displayed value: sponsor_username || sponsor_id || username || em dash
-                const val = u.sponsor_username || u.sponsor_id || u.username || '—';
+                // Decide displayed value: sponsor_referral_id || referral_id || em dash
+                const val = u.sponsor_referral_id || u.referral_id || '—';
                 // Update inner text of the primary span
                 const span = el.querySelector('span');
                 if (span && span.textContent !== val) {
@@ -202,3 +202,4 @@ function viewSponsorInfo(userId, sponsorId) {
 })();
 </script>
 @endpush
+

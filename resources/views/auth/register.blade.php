@@ -63,7 +63,7 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-300 mb-1">Sponsor Id <span class="text-gray-500 text-xs">(Optional)</span></label>
-                        <input type="text" name="sponsor_id" class="form-input block w-full shadow-sm sm:text-sm py-3 px-4" placeholder="Enter sponsor ID if you have one">
+                        <input type="text" name="sponsor_id" class="form-input block w-full shadow-sm sm:text-sm py-3 px-4" placeholder="Enter Sponsor Id if you have one">
                     </div>
 
                     <div>

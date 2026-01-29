@@ -27,7 +27,7 @@
                     </div>
                     <div>
                         <div class="font-bold text-gray-900">{{ $root->name }}</div>
-                        <div class="text-sm text-gray-600">{{ $root->referral_id }}</div>
+                        <div class="text-sm text-gray-600">Sponsor Id: {{ $root->referral_id }}</div>
                         <div class="text-xs text-gray-500 mt-1">{{ $root->referrals_count }} direct referrals</div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@ function renderNode(node, isRoot = false) {
                 <i class="fas fa-user-circle text-2xl"></i>
                 <div>
                     <div class="font-bold">${node.name}</div>
-                    <div class="text-xs opacity-90">${node.referral_id}</div>
+                    <div class="text-xs opacity-90">Sponsor Id: ${node.referral_id}</div>
                 </div>
             </div>
             ${isRoot ? '<div class="text-xs bg-white bg-opacity-20 rounded px-2 py-1 inline-block">Root User</div>' : ''}

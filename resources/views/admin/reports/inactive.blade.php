@@ -106,7 +106,7 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">User</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Referral ID</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Sponsor Id</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Direct Refs</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Sub Refs</th>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Days Inactive</th>

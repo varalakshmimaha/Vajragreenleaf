@@ -215,7 +215,7 @@
             </div>
             <div class="flex items-center gap-4">
                 <div class="bg-blue-50 px-6 py-4 rounded-2xl border border-blue-100">
-                    <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Your Unique ID</p>
+                    <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Your Sponsor Id</p>
                     <div class="flex items-center gap-3">
                         <span class="text-2xl font-black text-blue-700 font-mono tracking-tighter">{{ $user->referral_id }}</span>
                         <button onclick="copyReferralId('{{ $user->referral_id }}')" class="p-2 bg-white rounded-lg text-blue-400 shadow-sm hover:text-blue-600 transition-all border border-blue-100">

@@ -53,7 +53,6 @@
                                     </div>
                                     <div class="overflow-hidden">
                                         <p class="text-xs font-bold text-gray-900 truncate">{{ Auth::user()->name }}</p>
-                                        <p class="text-[10px] text-gray-400 truncate">{{ Auth::user()->username }}</p>
                                     </div>
                                 </div>
                                 <a href="{{ route('user.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Dashboard</a>
@@ -111,7 +110,6 @@
                             </div>
                             <div>
                                 <p class="text-sm font-bold text-gray-900">{{ Auth::user()->name }}</p>
-                                <p class="text-xs text-gray-500">{{ Auth::user()->username }}</p>
                             </div>
                         </div>
                         <a href="{{ route('user.dashboard') }}" class="text-center font-bold py-2 rounded-xl border border-gray-200 text-gray-700">Go to Dashboard</a>

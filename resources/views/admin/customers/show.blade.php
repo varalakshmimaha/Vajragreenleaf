@@ -42,8 +42,8 @@
                             <p class="font-bold text-slate-700">{{ $customer->mobile ?? 'Not provided' }}</p>
                         </div>
                         <div>
-                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Username / ID</p>
-                            <p class="font-bold text-slate-700 font-mono">{{ $customer->username ?? $customer->referral_id }}</p>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Sponsor Id</p>
+                            <p class="font-bold text-slate-700 font-mono">{{ $customer->referral_id }}</p>
                         </div>
                         <div>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Member Since</p>
@@ -64,12 +64,12 @@
             <h3 class="text-xl font-bold mb-8 uppercase tracking-widest opacity-80">Network Identity</h3>
 
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-6 border border-white/20">
-                <p class="text-xs font-bold uppercase tracking-widest mb-2 opacity-70 text-emerald-100">Referral ID</p>
+                <p class="text-xs font-bold uppercase tracking-widest mb-2 opacity-70 text-emerald-100">Sponsor Id</p>
                 <p class="text-4xl font-black font-mono tracking-tighter">{{ $customer->referral_id ?? 'PENDING' }}</p>
             </div>
 
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                <p class="text-xs font-bold uppercase tracking-widest mb-2 opacity-70 text-emerald-100">Sponsor Details</p>
+                <p class="text-xs font-bold uppercase tracking-widest mb-2 opacity-70 text-emerald-100">Sponsor By</p>
                 @if($customer->sponsor_referral_id)
                     <p class="text-2xl font-black font-mono mb-1">{{ $customer->sponsor_referral_id }}</p>
                     @if($customer->sponsorByReferralId)
