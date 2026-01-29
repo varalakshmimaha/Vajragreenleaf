@@ -1,6 +1,6 @@
 @php
     $title = $data['title'] ?? 'Ready to Start Your Project?';
-    $subtitle = $data['subtitle'] ?? '';
+    $$ubtitle = $data['content']['subtitle'] ?? '';
     $description = $data['description'] ?? 'Let\'s work together to bring your ideas to life.';
     $cta_text = $data['cta_text'] ?? 'Get In Touch';
     $cta_url = $data['cta_url'] ?? route('contact');
@@ -22,14 +22,14 @@
 
     <div class="container mx-auto px-4 relative z-10">
         <div class="max-w-3xl mx-auto text-center" data-animate="animate-fade-in-up">
-            @if($subtitle)
+            <!-- @if($subtitle)
                 <p class="text-white/80 font-semibold mb-3 uppercase tracking-wide">{{ $subtitle }}</p>
-            @endif
+            @endif -->
 
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">{{ $title }}</h2>
 
-            @if($description)
-                <p class="text-xl text-white/80 mb-8">{{ $description }}</p>
+            @if($subtitle)
+                <p class="text-xl text-white/80 mb-8">{{ $subtitle }}</p>
             @endif
 
             <a href="{{ $cta_url }}" class="inline-flex items-center bg-white text-primary px-8 py-4 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300">
