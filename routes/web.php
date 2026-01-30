@@ -332,6 +332,7 @@ Route::post('/logout', [FrontendAuthController::class, 'logout'])->name('logout'
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\UserDashboardController::class, 'index'])->name('dashboard');
     Route::put('/profile', [\App\Http\Controllers\UserDashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/sponsor', [\App\Http\Controllers\UserDashboardController::class, 'updateSponsor'])->name('sponsor.update');
     Route::put('/password', [\App\Http\Controllers\UserDashboardController::class, 'updatePassword'])->name('password.update');
     
     // Referral System Routes

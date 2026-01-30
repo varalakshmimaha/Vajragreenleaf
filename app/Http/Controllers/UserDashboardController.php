@@ -68,4 +68,47 @@ class UserDashboardController extends Controller
 
         return back()->with('success', 'Password changed successfully.');
     }
+
+    public function updateSponsor(Request $request)
+    {
+        $user = auth()->user();
+
+        // Check if user already has a sponsor
+        if ($user->sponsor_referral_id || $user->sponsor_id) {
+            return back()->withErrors(['sponsor_id' => 'You already have a sponsor assigned.']);
+        }
+
+        $request->validate([
+            'sponsor_id' => 'required|string',
+        ]);
+
+        $sponsorValue = $request->sponsor_id;
+        
+        // Find sponsor by referral_id or username
+        $sponsor = \App\Models\User::where('referral_id', $sponsorValue)
+            ->orWhere('username', $sponsorValue)
+            ->first();
+
+        if (!$sponsor) {
+            return back()->withErrors(['sponsor_id' => 'Invalid Sponsor ID.']);
+        }
+
+        // Prevent self-sponsoring
+        if ($sponsor->id === $user->id) {
+            return back()->withErrors(['sponsor_id' => 'You cannot sponsor yourself.']);
+        }
+
+        // Prevent circular sponsorship (basic check - immediate parent)
+        if ($sponsor->sponsor_referral_id === $user->referral_id) {
+             return back()->withErrors(['sponsor_id' => 'Circular sponsorship is not allowed.']);
+        }
+
+        // Update user with sponsor details
+        $user->update([
+            'sponsor_referral_id' => $sponsor->referral_id,
+            'sponsor_id' => $sponsor->username, // Legacy support
+        ]);
+
+        return back()->with('success', 'Sponsor added successfully!');
+    }
 }

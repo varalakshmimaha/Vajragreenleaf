@@ -145,18 +145,67 @@
                 </div>
             </div>
 
-            <!-- Tab 2: Sponsor Id -->
             <div class="tab-pane" id="sponsor">
-                <div class="bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl shadow-xl p-8 text-white mb-8">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                            <h2 class="text-3xl font-bold mb-2">Sponsor Information</h2>
-                            <p class="text-emerald-50">Your unique identity in our network</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Your Sponsor ID Card -->
+                    <div class="bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl shadow-xl p-8 text-white">
+                        <div class="flex flex-col justify-between items-start gap-4">
+                            <div>
+                                <h2 class="text-3xl font-bold mb-2">My Sponsor Id</h2>
+                                <p class="text-emerald-50">Your unique identity in our network</p>
+                            </div>
+                            <div class="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/30 w-full text-center">
+                                <p class="text-4xl font-bold font-mono tracking-wider">{{ $user->referral_id }}</p>
+                            </div>
                         </div>
-                        <div class="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/30">
-                            <p class="text-sm opacity-90 mb-1 font-medium">Your Sponsor Id</p>
-                            <p class="text-4xl font-bold font-mono tracking-wider">{{ $user->referral_id }}</p>
-                        </div>
+                    </div>
+
+                    <!-- Who Sponsored Me Card -->
+                    <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                        <h2 class="text-2xl font-bold mb-4 text-gray-900">Sponsored By</h2>
+                        
+                        @if($user->sponsor_referral_id || $user->sponsor_id)
+                            @php
+                                $sponsor = $user->sponsorByReferralId ?? $user->sponsor;
+                            @endphp
+                            <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold text-xl">
+                                        {{ strtoupper(substr($sponsor->name ?? 'U', 0, 1)) }}
+                                    </div>
+                                    <div>
+                                        <p class="text-lg font-bold text-gray-900">{{ $sponsor->name ?? 'Unknown' }}</p>
+                                        <p class="text-sm text-gray-500 font-mono">ID: {{ $user->sponsor_referral_id ?? $user->sponsor_id }}</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center text-sm">
+                                    <span class="text-gray-500">Status</span>
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Active</span>
+                                </div>
+                            </div>
+                        @else
+                            <div class="bg-yellow-50 rounded-xl p-6 border border-yellow-200 mb-4">
+                                <div class="flex gap-3">
+                                    <i class="fas fa-exclamation-triangle text-yellow-500 mt-1"></i>
+                                    <p class="text-sm text-yellow-700">You don't have a sponsor yet. Add a Sponsor ID to join a network.</p>
+                                </div>
+                            </div>
+                            
+                            <form action="{{ route('user.sponsor.update') }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <div class="form-group mb-4">
+                                    <label class="font-bold text-gray-700">Enter Sponsor ID</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" name="sponsor_id" class="form-input" placeholder="e.g. 12345" required>
+                                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 rounded-lg font-bold transition-colors">
+                                            Add
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2">Ask your upline for their 5-digit Referral ID or Username.</p>
+                                </div>
+                            </form>
+                        @endif
                     </div>
                 </div>
 
