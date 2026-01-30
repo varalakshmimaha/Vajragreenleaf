@@ -104,7 +104,7 @@ class FrontendAuthController extends Controller
 
 
         // Redirect to dashboard directly after registration
-        $dashboardUrl = route('dashboard');
+        $dashboardUrl = route('user.dashboard');
 
         return response()->json([
             'success' => true,
